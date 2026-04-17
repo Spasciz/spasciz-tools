@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-bg: #0a0a0a;
+  --cs-bg-surface: #141414;
+  --cs-bg-card: #1a1a1a;
+  --cs-bg-border: #252525;
+  --cs-accent: #E8705A;
+  --cs-accent-glow: rgba(232,112,90,0.12);
+  --cs-accent-hover: #d45f48;
+  --cs-teal: #2DD4BF;
+  --cs-teal-glow: rgba(45,212,191,0.1);
+  --cs-text: #ffffff;
+  --cs-text-muted: #888;
+  --cs-text-faint: #3a3a3a;
+  --cs-radius: 14px;
+  --cs-font: 'Space Grotesk', system-ui, sans-serif;
+  --cs-display: 'Syne', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--cs-bg);
+  color: var(--cs-text);
+  font-family: var(--cs-font);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,112,90,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,112,90,0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+.app { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* HEADER */
+.header { text-align: center; padding: 52px 0 44px; }
+.brand-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(232,112,90,0.08); border: 1px solid rgba(232,112,90,0.2);
+  border-radius: 100px; padding: 6px 16px 6px 10px; margin-bottom: 26px;
+}
+.brand-dot { width: 8px; height: 8px; background: var(--cs-accent); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+.brand-tag span { font-size: 11px; font-weight: 600; color: var(--cs-accent); letter-spacing: 1.5px; text-transform: uppercase; }
+.header h1 { font-family: var(--cs-display); font-size: clamp(32px, 6vw, 54px); font-weight: 800; line-height: 1.06; letter-spacing: -1px; margin-bottom: 14px; }
+.header h1 em { font-style: normal; color: var(--cs-accent); }
+.header p { font-size: 16px; color: var(--cs-text-muted); max-width: 460px; margin: 0 auto; line-height: 1.65; }
+
+/* STEP TRACK */
+.step-track {
+  display: flex; align-items: center;
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 100px; padding: 6px; margin-bottom: 32px;
+}
+.step-pill {
+  flex: 1; text-align: center; padding: 9px 6px; border-radius: 100px;
+  font-size: 11px; font-weight: 600; color: var(--cs-text-faint);
+  transition: all 0.3s; cursor: default; letter-spacing: 0.3px;
+}
+.step-pill.active { background: var(--cs-accent); color: #fff; }
+.step-pill.done { color: var(--cs-teal); }
+
+/* CARDS */
+.step-card {
+  background: var(--cs-bg-card); border: 1px solid var(--cs-bg-border);
+  border-radius: var(--cs-radius); padding: 32px; margin-bottom: 16px;
+  display: none; animation: fadeUp 0.35s ease forwards;
+}
+.step-card.visible { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.step-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cs-accent); margin-bottom: 8px; }
+.step-card h2 { font-family: var(--cs-display); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.step-card .desc { font-size: 14px; color: var(--cs-text-muted); margin-bottom: 26px; line-height: 1.65; }
+
+/* CHOICE GRID */
+.choice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.choice-btn {
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 10px; padding: 14px 12px; text-align: center; cursor: pointer;
+  transition: all 0.2s; color: var(--cs-text-muted); font-family: var(--cs-font);
+  font-size: 13px; font-weight: 600;
+}
+.choice-btn:hover { border-color: var(--cs-accent); color: var(--cs-text); background: var(--cs-accent-glow); }
+.choice-btn.selected { border-color: var(--cs-accent); background: var(--cs-accent-glow); color: var(--cs-accent); }
+.choice-btn .icon { font-size: 22px; display: block; margin-bottom: 6px; }
+
+/* MOOD TAGS */
+.mood-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.mood-tag {
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 100px; padding: 7px 16px; font-size: 13px; font-weight: 500;
+  color: var(--cs-text-muted); cursor: pointer; transition: all 0.2s;
+}
+.mood-tag:hover { border-color: var(--cs-teal); color: var(--cs-teal); }
+.mood-tag.selected { border-color: var(--cs-teal); background: var(--cs-teal-glow); color: var(--cs-teal); }
+
+/* SLIDER */
+.slider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.slider-label { font-size: 13px; color: var(--cs-text-muted); min-width: 80px; }
+.slider-val { font-size: 13px; font-weight: 700; color: var(--cs-accent); min-width: 44px; text-align: right; }
+input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:var(--cs-bg-border); border-radius:2px; outline:none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--cs-accent); cursor:pointer; border:3px solid var(--cs-bg-card); box-shadow:0 0 0 2px var(--cs-accent); }
+
+/* TEXT INPUT */
+.text-input {
+  width: 100%; background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 10px; padding: 14px 16px; color: var(--cs-text);
+  font-family: var(--cs-font); font-size: 14px; outline: none;
+  transition: border-color 0.2s; resize: none; line-height: 1.6;
+}
+.text-input:focus { border-color: var(--cs-accent); }
+.text-input::placeholder { color: #3a3a3a; }
+
+/* OUTPUT */
+.output-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cs-text-faint); margin-bottom: 10px; }
+.output-box {
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 12px; padding: 20px; font-size: 14px; color: var(--cs-text-muted);
+  line-height: 1.75; white-space: pre-wrap; word-break: break-word; position: relative; min-height: 60px;
+}
+.copy-btn {
+  position: absolute; top: 12px; right: 12px; background: var(--cs-bg-card);
+  border: 1px solid var(--cs-bg-border); border-radius: 8px; padding: 5px 12px;
+  font-size: 11px; font-weight: 600; color: var(--cs-text-muted); cursor: pointer;
+  font-family: var(--cs-font); transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--cs-teal); color: var(--cs-teal); }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--cs-accent); color: #fff; border: none;
+  padding: 15px 32px; border-radius: 10px; font-family: var(--cs-font);
+  font-weight: 700; font-size: 15px; cursor: pointer; letter-spacing: 0.3px;
+  transition: all 0.2s; width: 100%; justify-content: center; margin-top: 8px;
+}
+.btn-primary:hover { background: var(--cs-accent-hover); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; color: var(--cs-text-muted);
+  border: 1px solid var(--cs-bg-border); padding: 13px 28px; border-radius: 10px;
+  font-family: var(--cs-font); font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: all 0.2s; margin-top: 10px; width: 100%; justify-content: center;
+}
+.btn-secondary:hover { border-color: var(--cs-accent); color: var(--cs-text); }
+
+/* SUNO CARD */
+.suno-card {
+  background: linear-gradient(135deg, rgba(232,112,90,0.08) 0%, rgba(45,212,191,0.04) 100%);
+  border: 1px solid rgba(232,112,90,0.22); border-radius: var(--cs-radius);
+  padding: 28px; text-align: center; margin-bottom: 20px;
+}
+.suno-card h3 { font-family: var(--cs-display); font-size: 20px; margin-bottom: 8px; }
+.suno-card p { font-size: 14px; color: var(--cs-text-muted); margin-bottom: 20px; line-height: 1.6; }
+.suno-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #fff; color: #000; border: none; padding: 14px 28px;
+  border-radius: 10px; font-family: var(--cs-font); font-weight: 700; font-size: 14px;
+  cursor: pointer; text-decoration: none; transition: all 0.2s;
+}
+.suno-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,255,255,0.08); }
+
+/* WORKFLOW */
+.workflow-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.wf-step {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-radius: 10px; padding: 16px 18px;
+  animation: fadeUp 0.3s ease both;
+}
+.wf-step:nth-child(1){animation-delay:.05s} .wf-step:nth-child(2){animation-delay:.1s}
+.wf-step:nth-child(3){animation-delay:.15s} .wf-step:nth-child(4){animation-delay:.2s}
+.wf-step:nth-child(5){animation-delay:.25s}
+.wf-num {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--cs-accent-glow); border: 1px solid rgba(232,112,90,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--cs-accent); flex-shrink: 0;
+}
+.wf-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.wf-step p { font-size: 13px; color: var(--cs-text-muted); line-height: 1.55; }
+
+/* SPINNER */
+.spinner { display:inline-block; width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* UPGRADE BOX */
+.upgrade-box {
+  background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border);
+  border-top: 2px solid var(--cs-accent); border-radius: var(--cs-radius);
+  padding: 28px; text-align: center; margin-top: 24px;
+}
+.upgrade-box p { font-size: 14px; color: var(--cs-text-muted); margin-bottom: 18px; line-height: 1.65; }
+.upgrade-box a { display:inline-flex; align-items:center; gap:8px; background:var(--cs-accent); color:#fff; text-decoration:none; padding:13px 28px; border-radius:10px; font-weight:700; font-size:14px; transition:all .2s; }
+.upgrade-box a:hover { background:var(--cs-accent-hover); }
+
+/* FOOTER */
+.footer { text-align:center; padding:28px 0 0; }
+.footer p { font-size:12px; color:var(--cs-text-faint); }
+.footer a { color:var(--cs-accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="brand-tag">
+      <div class="brand-dot"></div>
+      <span>Creative Spasciz · Suno Workflow Pack</span>
+    </div>
+    <h1>You've started a track.<br>Let's <em>finish it right.</em></h1>
+    <p>Select your vibe, generate your Suno prompt, then follow the exact release workflow — step by step.</p>
+  </div>
+
+  <div class="step-track">
+    <div class="step-pill active" id="pill-1">① Vibe</div>
+    <div class="step-pill" id="pill-2">② Mood</div>
+    <div class="step-pill" id="pill-3">③ Prompt</div>
+    <div class="step-pill" id="pill-4">④ Suno</div>
+    <div class="step-pill" id="pill-5">⑤ Release</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card visible" id="step-1">
+    <div class="step-label">Step 01 · Genre</div>
+    <h2>Pick your genre</h2>
+    <p class="desc">This sets the entire prompt structure. Don't overthink it — pick what you'd actually listen to.</p>
+    <div class="choice-grid">
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Lo-Fi')"><span class="icon">🌙</span>Lo-Fi</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Trap')"><span class="icon">🔥</span>Trap</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Cinematic')"><span class="icon">🎬</span>Cinematic</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Afrobeats')"><span class="icon">🌍</span>Afrobeats</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Phonk')"><span class="icon">💀</span>Phonk</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Pop')"><span class="icon">✨</span>Pop</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','R&B')"><span class="icon">🎷</span>R&B</button>
+      <button class="choice-btn" onclick="selectChoice(this,'genre','Drill')"><span class="icon">🏙️</span>Drill</button>
+    </div>
+    <button class="btn-primary" id="btn-1" onclick="goStep(2)" disabled>Next: Set The Mood →</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card" id="step-2">
+    <div class="step-label">Step 02 · Mood & Energy</div>
+    <h2>What's the feeling?</h2>
+    <p class="desc">Pick up to 3 moods — these become your emotional anchors in the prompt.</p>
+    <div class="mood-wrap">
+      <button class="mood-tag" onclick="toggleMood(this,'Dark')">Dark</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Melancholic')">Melancholic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Euphoric')">Euphoric</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Aggressive')">Aggressive</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Dreamy')">Dreamy</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Nostalgic')">Nostalgic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Chill')">Chill</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Hype')">Hype</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Mysterious')">Mysterious</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Romantic')">Romantic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Cinematic')">Cinematic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Raw / Real')">Raw / Real</button>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">BPM</span>
+      <input type="range" min="60" max="180" value="120" oninput="state.bpm=parseInt(this.value); document.getElementById('bpm-val').textContent=this.value+' BPM'">
+      <span class="slider-val" id="bpm-val">120 BPM</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Energy</span>
+      <input type="range" min="1" max="10" value="6" oninput="state.energy=parseInt(this.value); document.getElementById('energy-val').textContent=this.value+'/10'">
+      <span class="slider-val" id="energy-val">6/10</span>
+    </div>
+    <button class="btn-primary" id="btn-2" onclick="goStep(3)" disabled>Next: Build the Prompt →</button>
+    <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card" id="step-3">
+    <div class="step-label">Step 03 · Prompt Builder</div>
+    <h2>Describe your track</h2>
+    <p class="desc">Add any specific details — instruments, theme, a lyric idea, or reference. The AI will build a complete, optimized Suno prompt from everything you've chosen.</p>
+    <textarea class="text-input" id="user-detail" rows="4" placeholder="e.g. 'piano melody, midnight city vibes, a hook about moving on' — or leave it blank to let the system decide…"></textarea>
+    <button class="btn-primary" style="margin-top:20px;" id="gen-btn" onclick="generatePrompt()">
+      <span id="gen-btn-text">Generate My Suno Prompt ⚡</span>
+    </button>
+    <div id="prompt-output-wrap" style="display:none; margin-top:24px;">
+      <div class="output-label">Your Optimized Suno Prompt</div>
+      <div class="output-box">
+        <button class="copy-btn" onclick="copyText('prompt-text',this)">Copy</button>
+        <span id="prompt-text"></span>
+      </div>
+      <button class="btn-primary" style="margin-top:16px;" onclick="goStep(4)">Open in Suno & Make the Track →</button>
+    </div>
+    <button class="btn-secondary" onclick="goStep(2)">← Back</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card" id="step-4">
+    <div class="step-label">Step 04 · Create in Suno</div>
+    <h2>Go make the track</h2>
+    <p class="desc">Your prompt is ready. Open Suno, paste it in, and generate 3–5 variations. Come back when you have your track selected.</p>
+    <div class="suno-card">
+      <h3>🎵 Open Suno AI</h3>
+      <p>Click below to open Suno in a new tab, then paste your prompt into the <strong>Custom Mode</strong> field for the best results.</p>
+      <a class="suno-btn" href="https://suno.com/create" target="_blank">Open Suno → suno.com/create</a>
+    </div>
+    <div class="output-label">Your Prompt (copy again if needed)</div>
+    <div class="output-box" style="font-size:13px;">
+      <button class="copy-btn" onclick="copyText('prompt-reminder',this)">Copy</button>
+      <span id="prompt-reminder"></span>
+    </div>
+    <div style="margin-top:20px; padding:16px 18px; background:var(--cs-bg-surface); border:1px solid rgba(45,212,191,0.15); border-left:3px solid var(--cs-teal); border-radius:10px;">
+      <p style="font-size:13px; color:var(--cs-text-muted); line-height:1.65;">
+        💡 <strong style="color:var(--cs-text);">Pro tip:</strong> Generate at least 3 variations. Listen to all of them before choosing — the best one is rarely the first.
+      </p>
+    </div>
+    <button class="btn-primary" style="margin-top:20px;" onclick="goStep(5)">I've Got My Track — Show Me the Release Plan →</button>
+    <button class="btn-secondary" onclick="goStep(3)">← Back</button>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card" id="step-5">
+    <div class="step-label">Step 05 · Release Workflow</div>
+    <h2>Your viral release plan</h2>
+    <p class="desc">This is the Spasciz workflow — exact steps, exact order. Don't post until you've done each one.</p>
+    <div id="release-content"></div>
+    <div class="upgrade-box">
+      <p>This is the free workflow. The full <strong style="color:var(--cs-text);">Suno Viral Workflow Pack</strong> includes 30 ready-to-run prompts, 6 genre frameworks, a hook engineering cheat sheet, and the complete 1 Track → 5 Posts repurpose map.</p>
+      <a href="https://spasciz.com" target="_blank">Get the Full Pack → spasciz.com</a>
+    </div>
+    <button class="btn-secondary" onclick="restart()" style="margin-top:12px;">← Start Over with a New Track</button>
+  </div>
+
+  <div class="footer">
+    <p>Built by <a href="https://spasciz.com" target="_blank">Creative Spasciz</a> · <a href="https://bit.ly/spascizskool" target="_blank">Join the Community</a> · <a href="https://bit.ly/sunoambassador" target="_blank">Try Suno Pro</a></p>
+  </div>
+</div>
+
+<script>
+const state = { genre: null, moods: [], bpm: 120, energy: 6, prompt: '' };
+
+function goStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`step-${i}`).classList.toggle('visible', i === n);
+    const pill = document.getElementById(`pill-${i}`);
+    pill.classList.remove('active','done');
+    if (i === n) pill.classList.add('active');
+    else if (i < n) pill.classList.add('done');
+  }
+  if (n === 5) buildReleaseWorkflow();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectChoice(btn, key, val) {
+  document.querySelectorAll(`[onclick*="'${key}'"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state[key] = val;
+  if (key === 'genre') document.getElementById('btn-1').disabled = false;
+}
+
+function toggleMood(btn, mood) {
+  if (btn.classList.contains('selected')) {
+    btn.classList.remove('selected');
+    state.moods = state.moods.filter(m => m !== mood);
+  } else {
+    if (state.moods.length >= 3) return;
+    btn.classList.add('selected');
+    state.moods.push(mood);
+  }
+  document.getElementById('btn-2').disabled = state.moods.length === 0;
+}
+
+async function generatePrompt() {
+  const detail = document.getElementById('user-detail').value.trim();
+  const btn = document.getElementById('gen-btn');
+  document.getElementById('gen-btn-text').innerHTML = '<span class="spinner"></span> Building your prompt…';
+  btn.disabled = true;
+  document.getElementById('prompt-output-wrap').style.display = 'none';
+
+  const moodStr = state.moods.length ? state.moods.join(', ') : 'versatile';
+  const detailStr = detail || 'no specific details — use creative judgment';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are Spasciz's Suno prompt engineer. Generate a single, highly optimized Suno AI music prompt based on the user's inputs.
+
+FORMAT RULES — follow exactly:
+- Start with the genre tag in brackets e.g. [Lo-Fi Hip Hop]
+- Include BPM and energy level as production notes
+- Include 3-5 specific sonic/instrument details
+- Include the mood atmosphere
+- End with a hook direction (how the first 8 bars should feel)
+- Total length: 60-90 words max
+- Make it specific, evocative, and production-ready
+- Output ONLY the prompt text. No intro, no explanation, no quotes.`,
+        messages: [{ role: 'user', content: `Genre: ${state.genre}\nMoods: ${moodStr}\nBPM: ${state.bpm}\nEnergy level: ${state.energy}/10\nUser's extra details: ${detailStr}\n\nGenerate the Suno prompt now.` }]
+      })
+    });
+    const data = await res.json();
+    state.prompt = (data.content?.find(b => b.type === 'text')?.text || '').trim();
+  } catch(e) {
+    state.prompt = `[${state.genre}] ${state.bpm} BPM, energy ${state.energy}/10 — ${moodStr} atmosphere with layered textures and a strong melodic hook. Open with a memorable 4-bar intro that sets the tone immediately. ${detail || 'Focus on emotional resonance and replay value.'} Keep the arrangement dynamic — build tension in the verse, release in the chorus.`;
+  }
+
+  document.getElementById('prompt-text').textContent = state.prompt;
+  document.getElementById('prompt-reminder').textContent = state.prompt;
+  document.getElementById('prompt-output-wrap').style.display = 'block';
+  document.getElementById('gen-btn-text').textContent = 'Regenerate ⚡';
+  btn.disabled = false;
+}
+
+function buildReleaseWorkflow() {
+  const genre = state.genre || 'your genre';
+  const mood = state.moods[0]?.toLowerCase() || 'moody';
+  const steps = [
+    { title: 'Export & trim the hook', body: `Take the best 30–60 seconds — specifically the moment that hits hardest. This is your Reel/Short clip. No intros, no fades.` },
+    { title: 'Write your caption FIRST', body: `Before you open Instagram or TikTok, write the caption. Use the formula below. The caption drives saves and shares — not just plays.` },
+    { title: 'Post to TikTok first', body: `TikTok is your discovery engine. Post the 30–60s clip with 3–5 hashtags: #${genre.toLowerCase().replace(/[\s\/&]/g,'')} #aimusic #suno #producerlife #musicproducer` },
+    { title: 'Repost to Reels 2–4 hours later', body: `Same clip, slight caption variation. Instagram's algorithm treats it as new content. Don't cross-post instantly.` },
+    { title: 'YouTube Short + Community post', body: `Upload the Short to YouTube. Then post in your Skool community or YouTube Community tab and ask: "Which variation should I turn into a full track?"` }
+  ];
+
+  const caption = `This ${mood} ${genre} track just hit different 🎵\n\nMade it with AI — took [X mins] from idea to finished track.\n\n[Add one line about what inspired the vibe]\n\nSave this if you want to hear more like it 🔖\n\n#${genre.toLowerCase().replace(/[\s\/&]/g,'')} #aimusic #suno #musicproducer`;
+
+  document.getElementById('release-content').innerHTML = `
+    <div class="workflow-steps">
+      ${steps.map((s,i) => `
+        <div class="wf-step">
+          <div class="wf-num">${i+1}</div>
+          <div><h4>${s.title}</h4><p>${s.body}</p></div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:24px;">
+      <div class="output-label">Caption Formula (fill in the brackets)</div>
+      <div class="output-box" style="font-size:13px;">
+        <button class="copy-btn" onclick="copyText('caption-text',this)">Copy</button>
+        <span id="caption-text">${caption}</span>
+      </div>
+    </div>
+  `;
+}
+
+function copyText(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).catch(()=>{});
+  btn.textContent = 'Copied!'; btn.style.color = 'var(--cs-teal)';
+  setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+}
+
+function restart() {
+  state.genre = null; state.moods = []; state.bpm = 120; state.energy = 6; state.prompt = '';
+  document.querySelectorAll('.choice-btn, .mood-tag').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btn-1').disabled = true;
+  document.getElementById('btn-2').disabled = true;
+  document.getElementById('prompt-output-wrap').style.display = 'none';
+  document.getElementById('user-detail').value = '';
+  document.getElementById('gen-btn-text').textContent = 'Generate My Suno Prompt ⚡';
+  document.getElementById('gen-btn').disabled = false;
+  goStep(1);
+}
+</script>
+</body>
+</html>

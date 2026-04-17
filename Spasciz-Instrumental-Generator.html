@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-bg: #0a0a0a; --cs-bg-surface: #141414; --cs-bg-card: #1a1a1a; --cs-bg-border: #252525;
+  --cs-accent: #E8705A; --cs-accent-glow: rgba(232,112,90,0.12); --cs-accent-hover: #d45f48;
+  --cs-teal: #2DD4BF; --cs-teal-glow: rgba(45,212,191,0.1); --cs-text: #ffffff;
+  --cs-text-muted: #888; --cs-text-faint: #3a3a3a; --cs-radius: 14px;
+  --cs-font: 'Space Grotesk', system-ui, sans-serif; --cs-display: 'Syne', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--cs-bg); color: var(--cs-text); font-family: var(--cs-font); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(232,112,90,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(232,112,90,0.025) 1px, transparent 1px); background-size: 52px 52px; pointer-events: none; z-index: 0; }
+.app { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 20px 80px; }
+.header { text-align: center; padding: 52px 0 44px; }
+.brand-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,112,90,0.08); border: 1px solid rgba(232,112,90,0.2); border-radius: 100px; padding: 6px 16px 6px 10px; margin-bottom: 26px; }
+.brand-dot { width: 8px; height: 8px; background: var(--cs-accent); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.brand-tag span { font-size: 11px; font-weight: 600; color: var(--cs-accent); letter-spacing: 1.5px; text-transform: uppercase; }
+.header h1 { font-family: var(--cs-display); font-size: clamp(30px, 6vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -1px; margin-bottom: 14px; }
+.header h1 em { font-style: normal; color: var(--cs-accent); }
+.header p { font-size: 15px; color: var(--cs-text-muted); max-width: 480px; margin: 0 auto; line-height: 1.65; }
+.platform-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; justify-content: center; }
+.platform-btn { display: flex; align-items: center; gap: 7px; background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 100px; padding: 8px 16px; cursor: pointer; font-family: var(--cs-font); font-size: 13px; font-weight: 600; color: var(--cs-text-muted); transition: all 0.2s; }
+.platform-btn:hover { border-color: var(--cs-accent); color: var(--cs-text); }
+.platform-btn.selected { border-color: var(--cs-accent); background: var(--cs-accent-glow); color: var(--cs-accent); }
+.platform-btn .p-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.step-track { display: flex; background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 100px; padding: 6px; margin-bottom: 32px; }
+.step-pill { flex: 1; text-align: center; padding: 9px 6px; border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--cs-text-faint); transition: all 0.3s; }
+.step-pill.active { background: var(--cs-accent); color: #fff; }
+.step-pill.done { color: var(--cs-teal); }
+.step-card { background: var(--cs-bg-card); border: 1px solid var(--cs-bg-border); border-radius: var(--cs-radius); padding: 32px; margin-bottom: 16px; display: none; animation: fadeUp 0.35s ease forwards; }
+.step-card.visible { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.step-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cs-accent); margin-bottom: 8px; }
+.step-card h2 { font-family: var(--cs-display); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.step-card .desc { font-size: 14px; color: var(--cs-text-muted); margin-bottom: 26px; line-height: 1.65; }
+.instrument-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.inst-btn { background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 10px; padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.2s; color: var(--cs-text-muted); font-family: var(--cs-font); font-size: 12px; font-weight: 600; position: relative; }
+.inst-btn:hover { border-color: var(--cs-accent); color: var(--cs-text); background: var(--cs-accent-glow); }
+.inst-btn.selected { border-color: var(--cs-accent); background: var(--cs-accent-glow); color: var(--cs-accent); }
+.inst-btn.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: 10px; color: var(--cs-accent); }
+.inst-btn .icon { font-size: 24px; display: block; margin-bottom: 7px; }
+.inst-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cs-text-faint); margin: 20px 0 10px; }
+.style-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.style-btn { background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; color: var(--cs-text-muted); font-family: var(--cs-font); text-align: left; }
+.style-btn:hover { border-color: var(--cs-teal); background: var(--cs-teal-glow); color: var(--cs-text); }
+.style-btn.selected { border-color: var(--cs-teal); background: var(--cs-teal-glow); color: var(--cs-teal); }
+.style-btn .style-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.style-btn .style-desc { font-size: 11px; color: var(--cs-text-faint); line-height: 1.4; }
+.mood-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.mood-tag { background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 100px; padding: 7px 16px; font-size: 13px; font-weight: 500; color: var(--cs-text-muted); cursor: pointer; transition: all 0.2s; }
+.mood-tag:hover { border-color: var(--cs-teal); color: var(--cs-teal); }
+.mood-tag.selected { border-color: var(--cs-teal); background: var(--cs-teal-glow); color: var(--cs-teal); }
+.slider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.slider-label { font-size: 13px; color: var(--cs-text-muted); min-width: 90px; }
+.slider-val { font-size: 13px; font-weight: 700; color: var(--cs-accent); min-width: 50px; text-align: right; }
+input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:var(--cs-bg-border); border-radius:2px; outline:none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--cs-accent); cursor:pointer; border:3px solid var(--cs-bg-card); box-shadow:0 0 0 2px var(--cs-accent); }
+.text-input { width: 100%; background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 10px; padding: 14px 16px; color: var(--cs-text); font-family: var(--cs-font); font-size: 14px; outline: none; transition: border-color 0.2s; resize: none; line-height: 1.6; }
+.text-input:focus { border-color: var(--cs-accent); }
+.text-input::placeholder { color: #3a3a3a; }
+.sel-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.sel-pill { background: var(--cs-accent-glow); border: 1px solid rgba(232,112,90,0.3); border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600; color: var(--cs-accent); }
+.output-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cs-text-faint); margin-bottom: 10px; }
+.output-box { background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 12px; padding: 20px; font-size: 14px; color: var(--cs-text-muted); line-height: 1.75; white-space: pre-wrap; word-break: break-word; position: relative; min-height: 60px; }
+.copy-btn { position: absolute; top: 12px; right: 12px; background: var(--cs-bg-card); border: 1px solid var(--cs-bg-border); border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 600; color: var(--cs-text-muted); cursor: pointer; font-family: var(--cs-font); transition: all 0.2s; }
+.copy-btn:hover { border-color: var(--cs-teal); color: var(--cs-teal); }
+.platform-tip { margin-top: 14px; padding: 14px 16px; background: var(--cs-bg-surface); border: 1px solid rgba(45,212,191,0.15); border-left: 3px solid var(--cs-teal); border-radius: 10px; font-size: 13px; color: var(--cs-text-muted); line-height: 1.65; }
+.platform-tip strong { color: var(--cs-text); }
+.btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--cs-accent); color: #fff; border: none; padding: 15px 32px; border-radius: 10px; font-family: var(--cs-font); font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; width: 100%; justify-content: center; margin-top: 8px; }
+.btn-primary:hover { background: var(--cs-accent-hover); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn-secondary { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: var(--cs-text-muted); border: 1px solid var(--cs-bg-border); padding: 13px 28px; border-radius: 10px; font-family: var(--cs-font); font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 10px; width: 100%; justify-content: center; }
+.btn-secondary:hover { border-color: var(--cs-accent); color: var(--cs-text); }
+.workflow-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.wf-step { display: flex; gap: 16px; align-items: flex-start; background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-radius: 10px; padding: 16px 18px; animation: fadeUp 0.3s ease both; }
+.wf-step:nth-child(1){animation-delay:.05s} .wf-step:nth-child(2){animation-delay:.1s} .wf-step:nth-child(3){animation-delay:.15s} .wf-step:nth-child(4){animation-delay:.2s} .wf-step:nth-child(5){animation-delay:.25s}
+.wf-num { width: 32px; height: 32px; border-radius: 8px; background: var(--cs-accent-glow); border: 1px solid rgba(232,112,90,0.3); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--cs-accent); flex-shrink: 0; }
+.wf-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.wf-step p { font-size: 13px; color: var(--cs-text-muted); line-height: 1.55; }
+.upgrade-box { background: var(--cs-bg-surface); border: 1px solid var(--cs-bg-border); border-top: 2px solid var(--cs-accent); border-radius: var(--cs-radius); padding: 28px; text-align: center; margin-top: 24px; }
+.upgrade-box p { font-size: 14px; color: var(--cs-text-muted); margin-bottom: 18px; line-height: 1.65; }
+.upgrade-box a { display:inline-flex; align-items:center; gap:8px; background:var(--cs-accent); color:#fff; text-decoration:none; padding:13px 28px; border-radius:10px; font-weight:700; font-size:14px; transition:all .2s; }
+.upgrade-box a:hover { background: var(--cs-accent-hover); }
+.spinner { display:inline-block; width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.footer { text-align:center; padding:28px 0 0; }
+.footer p { font-size:12px; color:var(--cs-text-faint); }
+.footer a { color:var(--cs-accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand-tag"><div class="brand-dot"></div><span>Creative Spasciz · AI Music Creator System</span></div>
+    <h1>No vocals.<br>Just <em>pure instrumentation.</em></h1>
+    <p>Pick your instruments, set the feel, generate a platform-ready instrumental prompt — works on any AI music tool.</p>
+  </div>
+  <div style="margin-bottom:8px; text-align:center;">
+    <div class="output-label" style="margin-bottom:12px;">Choose your AI music platform</div>
+    <div class="platform-bar">
+      <button class="platform-btn selected" onclick="selectPlatform(this,'Suno')"><span class="p-dot"></span>Suno</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'Udio')"><span class="p-dot"></span>Udio</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'ACE Studio')"><span class="p-dot"></span>ACE Studio</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'Stable Audio')"><span class="p-dot"></span>Stable Audio</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'ElevenLabs Music')"><span class="p-dot"></span>ElevenLabs</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'Mureka')"><span class="p-dot"></span>Mureka</button>
+      <button class="platform-btn" onclick="selectPlatform(this,'Other')"><span class="p-dot"></span>Other</button>
+    </div>
+  </div>
+  <div class="step-track">
+    <div class="step-pill active" id="pill-1">① Instruments</div>
+    <div class="step-pill" id="pill-2">② Lead Style</div>
+    <div class="step-pill" id="pill-3">③ Prompt</div>
+    <div class="step-pill" id="pill-4">④ Create</div>
+    <div class="step-pill" id="pill-5">⑤ Release</div>
+  </div>
+  <div class="step-card visible" id="step-1">
+    <div class="step-label">Step 01 · Instrumentation</div>
+    <h2>Build your instrument stack</h2>
+    <p class="desc">Select every instrument in your track. Pick as many as you want — the prompt layers them intelligently.</p>
+    <div class="inst-section-label">🎹 Keys & Melodic</div>
+    <div class="instrument-grid">
+      <button class="inst-btn" onclick="toggleInst(this,'Piano')"><span class="icon">🎹</span>Piano</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Rhodes')"><span class="icon">🎹</span>Rhodes</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Synth Lead')"><span class="icon">🎛️</span>Synth Lead</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Pad Synth')"><span class="icon">🌊</span>Pad Synth</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Organ')"><span class="icon">⛪</span>Organ</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Arp Synth')"><span class="icon">🔁</span>Arp Synth</button>
+    </div>
+    <div class="inst-section-label">🎸 Strings & Plucked</div>
+    <div class="instrument-grid">
+      <button class="inst-btn" onclick="toggleInst(this,'Guitar')"><span class="icon">🎸</span>Guitar</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Acoustic Guitar')"><span class="icon">🎸</span>Acoustic</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Bass Guitar')"><span class="icon">🎸</span>Bass Guitar</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Violin')"><span class="icon">🎻</span>Violin</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Cello')"><span class="icon">🎻</span>Cello</button>
+      <button class="inst-btn" onclick="toggleInst(this,'String Ensemble')"><span class="icon">🎻</span>Strings</button>
+    </div>
+    <div class="inst-section-label">🎷 Wind & Brass</div>
+    <div class="instrument-grid">
+      <button class="inst-btn" onclick="toggleInst(this,'Saxophone')"><span class="icon">🎷</span>Saxophone</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Trumpet')"><span class="icon">🎺</span>Trumpet</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Flute')"><span class="icon">🪈</span>Flute</button>
+      <button class="inst-btn" onclick="toggleInst(this,'French Horn')"><span class="icon">🎺</span>French Horn</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Trombone')"><span class="icon">🎺</span>Trombone</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Brass Section')"><span class="icon">🎺</span>Brass</button>
+    </div>
+    <div class="inst-section-label">🥁 Rhythm</div>
+    <div class="instrument-grid">
+      <button class="inst-btn" onclick="toggleInst(this,'Drums')"><span class="icon">🥁</span>Drums</button>
+      <button class="inst-btn" onclick="toggleInst(this,'808 Bass')"><span class="icon">💥</span>808 Bass</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Hi-Hats')"><span class="icon">🥁</span>Hi-Hats</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Percussion')"><span class="icon">🪘</span>Percussion</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Sub Bass')"><span class="icon">〰️</span>Sub Bass</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Trap Drums')"><span class="icon">🥁</span>Trap Drums</button>
+    </div>
+    <div class="inst-section-label">🌌 Texture</div>
+    <div class="instrument-grid">
+      <button class="inst-btn" onclick="toggleInst(this,'Ambient Texture')"><span class="icon">🌫️</span>Ambient</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Choir')"><span class="icon">👥</span>Choir</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Orchestra')"><span class="icon">🎼</span>Orchestra</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Vinyl Crackle')"><span class="icon">💿</span>Vinyl</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Nature Sounds')"><span class="icon">🌿</span>Nature</button>
+      <button class="inst-btn" onclick="toggleInst(this,'Sample Chops')"><span class="icon">✂️</span>Sample Chops</button>
+    </div>
+    <div id="sel-pills-wrap" style="margin-top:20px; display:none;"><div class="output-label">Selected</div><div class="sel-pill-row" id="sel-pills"></div></div>
+    <button class="btn-primary" id="btn-1" onclick="goStep(2)" disabled>Next: Set the Lead Style →</button>
+  </div>
+  <div class="step-card" id="step-2">
+    <div class="step-label">Step 02 · Lead Style & Feel</div>
+    <h2>How does the lead play?</h2>
+    <p class="desc">No vocals means the lead instrument carries everything. Choose how it performs, then dial in mood and tempo.</p>
+    <div class="inst-section-label" style="margin-top:0;">LEAD PERFORMANCE STYLE</div>
+    <div class="style-grid">
+      <button class="style-btn" onclick="selectStyle(this,'Melodic & Flowing')"><div class="style-name">Melodic & Flowing</div><div class="style-desc">Smooth lines, emotional phrasing</div></button>
+      <button class="style-btn" onclick="selectStyle(this,'Rhythmic & Choppy')"><div class="style-name">Rhythmic & Choppy</div><div class="style-desc">Staccato, syncopated, groove-driven</div></button>
+      <button class="style-btn" onclick="selectStyle(this,'Minimal & Sparse')"><div class="style-name">Minimal & Sparse</div><div class="style-desc">Space between notes, deliberate</div></button>
+      <button class="style-btn" onclick="selectStyle(this,'Complex & Layered')"><div class="style-name">Complex & Layered</div><div class="style-desc">Counter-melodies, rich arrangement</div></button>
+      <button class="style-btn" onclick="selectStyle(this,'Improvisational')"><div class="style-name">Improvisational</div><div class="style-desc">Jazz-feel, expressive runs</div></button>
+      <button class="style-btn" onclick="selectStyle(this,'Cinematic & Building')"><div class="style-name">Cinematic & Building</div><div class="style-desc">Swells, tension, crescendos</div></button>
+    </div>
+    <div class="inst-section-label">MOOD (pick up to 3)</div>
+    <div class="mood-wrap">
+      <button class="mood-tag" onclick="toggleMood(this,'Dark')">Dark</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Melancholic')">Melancholic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Uplifting')">Uplifting</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Tense')">Tense</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Peaceful')">Peaceful</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Nostalgic')">Nostalgic</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Aggressive')">Aggressive</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Dreamy')">Dreamy</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Mysterious')">Mysterious</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Euphoric')">Euphoric</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Raw')">Raw</button>
+      <button class="mood-tag" onclick="toggleMood(this,'Epic')">Epic</button>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">BPM</span>
+      <input type="range" min="40" max="200" value="90" oninput="state.bpm=parseInt(this.value); document.getElementById('bpm-val').textContent=this.value+' BPM'">
+      <span class="slider-val" id="bpm-val">90 BPM</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Complexity</span>
+      <input type="range" min="1" max="10" value="5" oninput="state.complexity=parseInt(this.value); document.getElementById('complexity-val').textContent=this.value+'/10'">
+      <span class="slider-val" id="complexity-val">5/10</span>
+    </div>
+    <button class="btn-primary" id="btn-2" onclick="goStep(3)" disabled>Build My Instrumental Prompt →</button>
+    <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+  </div>
+  <div class="step-card" id="step-3">
+    <div class="step-label">Step 03 · Prompt Builder</div>
+    <h2>Any final direction?</h2>
+    <p class="desc">Add a scene, reference, or extra detail — or leave blank and let the system take over.</p>
+    <textarea class="text-input" id="user-detail" rows="3" placeholder="e.g. 'sounds like Hans Zimmer meets J Dilla' or 'late night studio session' — or leave blank…"></textarea>
+    <button class="btn-primary" style="margin-top:20px;" id="gen-btn" onclick="generatePrompt()"><span id="gen-btn-text">Generate My Instrumental Prompt ⚡</span></button>
+    <div id="prompt-output-wrap" style="display:none; margin-top:24px;">
+      <div class="output-label">Your Instrumental Prompt — Ready for <span id="platform-label-out">Suno</span></div>
+      <div class="output-box"><button class="copy-btn" onclick="copyText('prompt-text',this)">Copy</button><span id="prompt-text"></span></div>
+      <div class="platform-tip" id="platform-tip"></div>
+      <div id="rationale-wrap" style="display:none; margin-top:14px; padding:14px 16px; background:var(--cs-bg-surface); border:1px solid var(--cs-bg-border); border-radius:10px;"><div class="output-label">Why this works</div><p id="prompt-rationale" style="font-size:13px; color:var(--cs-text-muted); line-height:1.65;"></p></div>
+      <button class="btn-primary" style="margin-top:16px;" onclick="goStep(4)">Take This Into Your Platform →</button>
+    </div>
+    <button class="btn-secondary" onclick="goStep(2)">← Back</button>
+  </div>
+  <div class="step-card" id="step-4">
+    <div class="step-label">Step 04 · Create</div>
+    <h2>Go build the instrumental</h2>
+    <p class="desc">Your prompt is locked. Generate at least 3 variations — instrumentals need more passes to find the right feel.</p>
+    <div style="background:linear-gradient(135deg,rgba(232,112,90,0.08),rgba(45,212,191,0.04)); border:1px solid rgba(232,112,90,0.22); border-radius:var(--cs-radius); padding:24px; text-align:center; margin-bottom:20px;">
+      <div style="font-size:32px; margin-bottom:12px;">🎼</div>
+      <h3 style="font-family:var(--cs-display); font-size:18px; margin-bottom:8px;">Open <span id="platform-name-card">Your Platform</span></h3>
+      <p style="font-size:13px; color:var(--cs-text-muted); margin-bottom:16px; line-height:1.6;" id="platform-create-tip">Paste your prompt and use any instrumental or no-vocals mode available.</p>
+      <a id="platform-link" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#fff; color:#000; text-decoration:none; padding:13px 26px; border-radius:10px; font-weight:700; font-size:14px; font-family:var(--cs-font);">Open Platform →</a>
+    </div>
+    <div class="output-label">Your Prompt</div>
+    <div class="output-box" style="font-size:13px;"><button class="copy-btn" onclick="copyText('prompt-reminder',this)">Copy</button><span id="prompt-reminder"></span></div>
+    <div class="platform-tip" style="margin-top:16px;">💡 <strong>Instrumental tip:</strong> Look for a "no vocals" or "instrumental" toggle in your platform. If there isn't one, add <strong>[no vocals] [instrumental]</strong> at the start of your prompt.</div>
+    <button class="btn-primary" style="margin-top:20px;" onclick="goStep(5)">I've Got My Track — Build the Release Plan →</button>
+    <button class="btn-secondary" onclick="goStep(3)">← Back</button>
+  </div>
+  <div class="step-card" id="step-5">
+    <div class="step-label">Step 05 · Release Workflow</div>
+    <h2>Your instrumental release plan</h2>
+    <p class="desc">Instrumentals hit differently — here's the exact workflow built around no-vocal tracks.</p>
+    <div id="release-content"></div>
+    <div class="upgrade-box">
+      <p>This is the free workflow. The full <strong style="color:var(--cs-text);">AI Music Creator System</strong> includes platform-specific prompt packs, genre frameworks, hook cheat sheets, and the complete 1 Track → 5 Posts repurpose map.</p>
+      <a href="https://spasciz.com" target="_blank">Get the Full System → spasciz.com</a>
+    </div>
+    <button class="btn-secondary" onclick="restart()" style="margin-top:12px;">← Start Over</button>
+  </div>
+  <div class="footer"><p>Built by <a href="https://spasciz.com" target="_blank">Creative Spasciz</a> · <a href="https://bit.ly/spascizskool" target="_blank">Join the Community</a></p></div>
+</div>
+<script>
+const state = { instruments: [], leadStyle: null, moods: [], bpm: 90, complexity: 5, prompt: '', platform: 'Suno' };
+const platformData = {
+  'Suno': { tip: 'In Suno Custom Mode, add [instrumental] in the lyrics box to fully suppress vocals.', link: 'https://suno.com/create', create: 'Use Custom Mode. Type [instrumental] in the lyrics field to suppress all vocals.' },
+  'Udio': { tip: 'In Udio, use the "Instrumental" toggle in generation settings to remove vocals entirely.', link: 'https://udio.com', create: 'Enable the Instrumental toggle in generation settings before generating.' },
+  'ACE Studio': { tip: 'ACE Studio handles instrumentals well — leave the vocal field blank and specify "no vocals" in your prompt.', link: 'https://ace-studio.timedomain.cn', create: 'Leave the vocal field blank and include "no vocals" in your prompt.' },
+  'Stable Audio': { tip: 'Stable Audio is natively strong on instrumentals. Omit any vocal references and it defaults to instrumental.', link: 'https://stableaudio.com', create: 'Omit all vocal references — Stable Audio defaults to instrumental when no voice is mentioned.' },
+  'ElevenLabs Music': { tip: 'ElevenLabs Music works well for instrumental atmospheres. Focus on texture, mood, and instrumentation descriptors.', link: 'https://elevenlabs.io', create: 'Focus on texture and mood descriptors. Omit all vocal references.' },
+  'Mureka': { tip: 'Mureka supports instrumental generation — select the Instrumental category before generating.', link: 'https://mureka.ai', create: 'Select the Instrumental category in Mureka before pasting your prompt.' },
+  'Other': { tip: 'Add [no vocals] [instrumental] at the start of your prompt — most AI music platforms respect this directive.', link: '#', create: 'Add [no vocals] [instrumental] at the start of your prompt.' }
+};
+function selectPlatform(btn, name) {
+  document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected'); state.platform = name; updatePlatformUI();
+}
+function updatePlatformUI() {
+  const d = platformData[state.platform];
+  document.getElementById('platform-label-out').textContent = state.platform;
+  document.getElementById('platform-name-card').textContent = state.platform;
+  document.getElementById('platform-create-tip').textContent = d.create;
+  document.getElementById('platform-tip').innerHTML = `💡 <strong>${state.platform} tip:</strong> ${d.tip}`;
+  const link = document.getElementById('platform-link');
+  link.href = d.link === '#' ? '#' : d.link;
+  link.textContent = d.link === '#' ? 'Open Your Platform →' : `Open ${state.platform} →`;
+}
+function goStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`step-${i}`).classList.toggle('visible', i === n);
+    const pill = document.getElementById(`pill-${i}`);
+    pill.classList.remove('active','done');
+    if (i === n) pill.classList.add('active');
+    else if (i < n) pill.classList.add('done');
+  }
+  if (n === 5) buildReleaseWorkflow();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleInst(btn, name) {
+  const sel = btn.classList.toggle('selected');
+  if (sel) state.instruments.push(name); else state.instruments = state.instruments.filter(i => i !== name);
+  const wrap = document.getElementById('sel-pills-wrap');
+  wrap.style.display = state.instruments.length ? 'block' : 'none';
+  document.getElementById('sel-pills').innerHTML = state.instruments.map(i => `<span class="sel-pill">${i}</span>`).join('');
+  document.getElementById('btn-1').disabled = state.instruments.length === 0;
+}
+function selectStyle(btn, val) {
+  document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected'); state.leadStyle = val; checkStep2();
+}
+function toggleMood(btn, mood) {
+  if (btn.classList.contains('selected')) { btn.classList.remove('selected'); state.moods = state.moods.filter(m => m !== mood); }
+  else { if (state.moods.length >= 3) return; btn.classList.add('selected'); state.moods.push(mood); }
+  checkStep2();
+}
+function checkStep2() { document.getElementById('btn-2').disabled = !state.leadStyle || state.moods.length === 0; }
+async function generatePrompt() {
+  const detail = document.getElementById('user-detail').value.trim();
+  const btn = document.getElementById('gen-btn');
+  document.getElementById('gen-btn-text').innerHTML = '<span class="spinner"></span> Engineering your prompt…';
+  btn.disabled = true; document.getElementById('prompt-output-wrap').style.display = 'none';
+  const pd = platformData[state.platform];
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+        system: `You are an AI music instrumental prompt engineer. Generate a vocals-free prompt for ${state.platform} AND a rationale.\nFORMAT:\nPROMPT: [70-100 words. Start with [Instrumental]. Include instruments, BPM, lead style, mood, arrangement, no-vocals directive. Optimize for ${state.platform}: ${pd.tip}]\nRATIONALE: [1-2 sentences, producer tone]`,
+        messages: [{ role: 'user', content: `Instruments: ${state.instruments.join(', ')}\nLead: ${state.leadStyle}\nMoods: ${state.moods.join(', ')}\nBPM: ${state.bpm}\nComplexity: ${state.complexity}/10\nRef: ${detail||'none'}\nPlatform: ${state.platform}` }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content?.find(b => b.type === 'text')?.text || '').trim();
+    const pMatch = text.match(/PROMPT:\s*([\s\S]*?)(?=RATIONALE:|$)/i);
+    const rMatch = text.match(/RATIONALE:\s*([\s\S]*)/i);
+    state.prompt = (pMatch?.[1] || text).trim();
+    const rationale = (rMatch?.[1] || '').trim();
+    if (rationale) { document.getElementById('prompt-rationale').textContent = rationale; document.getElementById('rationale-wrap').style.display = 'block'; }
+  } catch(e) {
+    state.prompt = `[Instrumental] ${state.bpm} BPM — ${state.moods.join(', ')} arrangement featuring ${state.instruments.join(', ')}. ${state.leadStyle} style. No vocals. Complexity ${state.complexity}/10. ${detail||'Let the instruments carry the full emotional weight.'}`;
+  }
+  document.getElementById('prompt-text').textContent = state.prompt;
+  document.getElementById('prompt-reminder').textContent = state.prompt;
+  document.getElementById('platform-label-out').textContent = state.platform;
+  document.getElementById('platform-tip').innerHTML = `💡 <strong>${state.platform} tip:</strong> ${pd.tip}`;
+  document.getElementById('prompt-output-wrap').style.display = 'block';
+  document.getElementById('gen-btn-text').textContent = 'Regenerate ⚡'; btn.disabled = false;
+}
+function buildReleaseWorkflow() {
+  const lead = state.instruments[0] || 'your lead instrument';
+  const mood = state.moods[0]?.toLowerCase() || 'atmospheric';
+  const steps = [
+    { title: 'Clip the most emotional 30–45 seconds', body: 'Find the peak moment — not the intro. That\'s your short-form clip.' },
+    { title: 'Pair it with a visual that matches the feel', body: 'No vocals = the visual does extra work. Slow zoom, timelapse, or studio B-roll. Keep cuts minimal.' },
+    { title: 'Caption it as a feeling, not a genre', body: `Don't say "${lead} instrumental." Say "this is what [emotion] sounds like at 2am."` },
+    { title: 'Post to YouTube Shorts + TikTok simultaneously', body: 'Instrumentals crush on YouTube Shorts — the study/focus audience is massive. Use #instrumentalmusic #aimusic #beatmaker' },
+    { title: 'Pitch it as free background music', body: 'Post in your community: "Free to use in your content — DM me for the file." Drives follows and real engagement.' }
+  ];
+  const caption = `This ${mood} instrumental just came out of nowhere 🎹\n\nNo vocals. Just [${lead}] doing all the talking.\n\n[One line about the vibe]\n\nSave this for your next late-night session 🔖\n\n#instrumentalmusic #aimusic #beatmaker #studymusic`;
+  document.getElementById('release-content').innerHTML = `
+    <div class="workflow-steps">${steps.map((s,i)=>`<div class="wf-step"><div class="wf-num">${i+1}</div><div><h4>${s.title}</h4><p>${s.body}</p></div></div>`).join('')}</div>
+    <div style="margin-top:24px;"><div class="output-label">Caption Formula</div>
+    <div class="output-box" style="font-size:13px;"><button class="copy-btn" onclick="copyText('caption-text',this)">Copy</button><span id="caption-text">${caption}</span></div></div>`;
+}
+function copyText(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).catch(()=>{});
+  btn.textContent = 'Copied!'; btn.style.color = 'var(--cs-teal)';
+  setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+}
+function restart() {
+  Object.assign(state, { instruments: [], leadStyle: null, moods: [], bpm: 90, complexity: 5, prompt: '' });
+  document.querySelectorAll('.inst-btn,.style-btn,.mood-tag').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btn-1').disabled = true; document.getElementById('btn-2').disabled = true;
+  document.getElementById('prompt-output-wrap').style.display = 'none';
+  document.getElementById('sel-pills-wrap').style.display = 'none';
+  document.getElementById('user-detail').value = '';
+  document.getElementById('gen-btn-text').textContent = 'Generate My Instrumental Prompt ⚡';
+  document.getElementById('gen-btn').disabled = false; goStep(1);
+}
+updatePlatformUI();
+</script>
+</body>
+</html>
