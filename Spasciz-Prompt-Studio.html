@@ -358,6 +358,43 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .variation-label{font-family:var(--cs-mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cs-teal)}
 .variation-text{padding:14px;font-family:var(--cs-mono);font-size:12px;line-height:1.75;color:var(--cs-cream);white-space:pre-wrap;max-height:280px;overflow-y:auto}
 
+/* API KEY WIZARD */
+.modal-wide{max-width:600px}
+.wiz-progress{display:flex;gap:6px;margin-bottom:24px}
+.wiz-dot{flex:1;height:3px;border-radius:2px;background:var(--cs-bg-border);transition:background .35s}
+.wiz-dot.done{background:var(--cs-teal)}
+.wiz-dot.active{background:var(--cs-accent)}
+.wiz-step{display:none}
+.wiz-step.active{display:block;animation:fadeUp .35s cubic-bezier(0.16,1,0.3,1)}
+.wiz-eyebrow{font-family:var(--cs-mono);font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--cs-teal);margin-bottom:10px}
+.wiz-body{font-size:13.5px;color:var(--cs-text-muted);line-height:1.7;margin-bottom:18px}
+.wiz-body strong{color:var(--cs-text)}
+.wiz-list{list-style:none;margin:0 0 18px;padding:0}
+.wiz-list li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--cs-bg-border);font-size:13px;color:var(--cs-text-muted);line-height:1.6}
+.wiz-list li:last-child{border-bottom:none}
+.wiz-num{flex-shrink:0;width:22px;height:22px;border-radius:var(--cs-radius);background:var(--cs-accent);color:var(--cs-bg);display:flex;align-items:center;justify-content:center;font-family:var(--cs-mono);font-size:10px;font-weight:700}
+.wiz-cost{background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius);overflow:hidden;margin-bottom:18px}
+.wiz-cost-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--cs-bg-border);font-size:12px}
+.wiz-cost-row:last-child{border-bottom:none}
+.wiz-cost-row span:first-child{color:var(--cs-text-muted)}
+.wiz-cost-row span:last-child{font-family:var(--cs-mono);font-size:11px;font-weight:700;color:var(--cs-teal);letter-spacing:.5px}
+.wiz-cost-row.hi{background:rgba(79,224,196,.06)}
+.wiz-link{display:inline-flex;align-items:center;gap:8px;background:var(--cs-cream);color:var(--cs-bg);text-decoration:none;padding:12px 20px;border-radius:var(--cs-radius);font-family:var(--cs-mono);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all .2s;margin-bottom:16px}
+.wiz-link:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(245,239,224,.14)}
+.wiz-note{background:rgba(79,224,196,.06);border:1px solid rgba(79,224,196,.25);border-radius:var(--cs-radius);padding:12px 14px;font-size:12px;color:var(--cs-text-muted);line-height:1.6;margin-bottom:16px}
+.wiz-note strong{color:var(--cs-teal)}
+.wiz-warn{background:rgba(232,112,90,.07);border:1px solid rgba(232,112,90,.28);border-radius:var(--cs-radius);padding:12px 14px;font-size:12px;color:var(--cs-text-muted);line-height:1.6;margin-bottom:16px}
+.wiz-warn strong{color:var(--cs-accent)}
+.wiz-nav{display:flex;gap:9px;align-items:center;margin-top:20px}
+.wiz-nav .spacer{flex:1}
+.wiz-status{font-family:var(--cs-mono);font-size:11px;line-height:1.6;padding:11px 14px;border-radius:var(--cs-radius);margin-bottom:14px;display:none}
+.wiz-status.show{display:block}
+.wiz-status.ok{background:rgba(79,224,196,.08);border:1px solid rgba(79,224,196,.35);color:var(--cs-teal)}
+.wiz-status.err{background:rgba(232,112,90,.08);border:1px solid rgba(232,112,90,.35);color:var(--cs-accent)}
+.wiz-skip{font-family:var(--cs-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cs-text-faint);text-align:center;margin-top:16px;line-height:1.8}
+.wiz-skip a{color:var(--cs-text-muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.wiz-skip a:hover{color:var(--cs-teal)}
+
 /* ENGINEER PANEL */
 .eng-card{background:linear-gradient(180deg,rgba(79,224,196,.045) 0%,var(--cs-bg-card) 60%);border:1px solid rgba(79,224,196,.22);border-radius:var(--cs-radius-card);padding:24px;margin-bottom:16px}
 .eng-presets{padding:14px 16px;background:rgba(79,224,196,.04);border:1px dashed rgba(79,224,196,.25);border-radius:var(--cs-radius);margin-bottom:20px}
@@ -384,19 +421,92 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 </head>
 <body>
 
-<!-- API KEY MODAL -->
+<!-- API KEY SETUP WIZARD -->
 <div class="modal-backdrop" id="apiModal">
-  <div class="modal">
-    <div style="display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--cs-bg-border);border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cs-teal);margin-bottom:14px;">🔑 One-time setup</div>
-    <h2>Connect Your API Key</h2>
-    <p>Powers AI Co-Write and Full Song generation. Stored locally — never sent anywhere except Anthropic. Usually $0.01–0.03 per generation.</p>
-    <div class="modal-warn"><strong>Don't have one?</strong> Get a free $5 credit at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a> → Settings → API Keys → Create Key.</div>
-    <label class="f-label f-label-teal">Your Anthropic API Key</label>
-    <input type="password" class="f-input" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-family:var(--cs-mono);margin-bottom:6px;">
-    <div style="font-size:11px;color:var(--cs-text-faint);margin-bottom:16px;">Stored in browser only. Never shared.</div>
-    <button class="btn-primary" onclick="saveApiKey()">Save & Start Creating</button>
-    <div class="modal-actions" style="margin-top:10px;">
-      <button class="modal-btn-cancel" onclick="closeApiModal()">Skip for now</button>
+  <div class="modal modal-wide">
+    <div class="wiz-progress">
+      <div class="wiz-dot active" id="wizDot-1"></div>
+      <div class="wiz-dot" id="wizDot-2"></div>
+      <div class="wiz-dot" id="wizDot-3"></div>
+      <div class="wiz-dot" id="wizDot-4"></div>
+    </div>
+
+    <!-- STEP 1 — WHY -->
+    <div class="wiz-step active" id="wizStep-1">
+      <div class="wiz-eyebrow">Step 01 · How this works</div>
+      <h2>You Own the Engine</h2>
+      <p class="wiz-body">Prompt Studio has <strong>no subscription and no servers</strong>. The AI features connect straight to Claude using <strong>your own API key</strong>, so you pay Anthropic directly at cost — nothing routed through me, no markup.</p>
+      <div class="wiz-cost">
+        <div class="wiz-cost-row"><span>One AI vocal script</span><span>~$0.02</span></div>
+        <div class="wiz-cost-row"><span>One Co-Write pass</span><span>~$0.02</span></div>
+        <div class="wiz-cost-row"><span>One stem prompt</span><span>~$0.01</span></div>
+        <div class="wiz-cost-row hi"><span>Anthropic free credit for new accounts</span><span>$5 = ~250 runs</span></div>
+      </div>
+      <div class="wiz-note"><strong>Already have a key?</strong> Jump straight to the last step and paste it.</div>
+      <div class="wiz-nav">
+        <div class="spacer"></div>
+        <button class="btn-ghost" onclick="wizGo(4)">I have a key →</button>
+        <button class="btn-primary" style="width:auto;" onclick="wizGo(2)">Set It Up (2 min) →</button>
+      </div>
+      <div class="wiz-skip">4 of 6 modes work with no key at all · <a onclick="wizSkip()">Skip for now</a></div>
+    </div>
+
+    <!-- STEP 2 — ACCOUNT + BILLING -->
+    <div class="wiz-step" id="wizStep-2">
+      <div class="wiz-eyebrow">Step 02 · Account &amp; credit</div>
+      <h2>Create Your Anthropic Account</h2>
+      <p class="wiz-body">This is the account that powers your generations. Free to create.</p>
+      <ul class="wiz-list">
+        <li><span class="wiz-num">1</span><div>Open the Anthropic Console and sign up with your email.</div></li>
+        <li><span class="wiz-num">2</span><div>Verify your email and log in.</div></li>
+        <li><span class="wiz-num">3</span><div>Go to <strong>Settings → Billing</strong>. New accounts usually get <strong>$5 in free credit</strong> — that's roughly 250 generations, enough to run Prompt Studio for weeks before you pay anything.</div></li>
+        <li><span class="wiz-num">4</span><div>If you don't see free credit, add a card and load <strong>$5</strong>. That's the smallest amount and it lasts a long time.</div></li>
+      </ul>
+      <a class="wiz-link" href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener">Open Anthropic Billing ↗</a>
+      <div class="wiz-warn"><strong>Heads up:</strong> API credit is separate from a Claude.ai Pro subscription. Having Claude Pro does <em>not</em> give you API credit — you need credit on the Console side.</div>
+      <div class="wiz-nav">
+        <button class="btn-ghost" onclick="wizGo(1)">← Back</button>
+        <div class="spacer"></div>
+        <button class="btn-primary" style="width:auto;" onclick="wizGo(3)">Done — Next →</button>
+      </div>
+      <div class="wiz-skip"><a onclick="wizSkip()">Skip for now</a></div>
+    </div>
+
+    <!-- STEP 3 — GENERATE KEY -->
+    <div class="wiz-step" id="wizStep-3">
+      <div class="wiz-eyebrow">Step 03 · Generate the key</div>
+      <h2>Create Your API Key</h2>
+      <p class="wiz-body">One key is all you need. It works forever until you delete it.</p>
+      <ul class="wiz-list">
+        <li><span class="wiz-num">1</span><div>Open <strong>Settings → API Keys</strong> in the Console.</div></li>
+        <li><span class="wiz-num">2</span><div>Click <strong>Create Key</strong>. Name it something you'll recognize — "Prompt Studio" works.</div></li>
+        <li><span class="wiz-num">3</span><div><strong>Copy it immediately.</strong> Anthropic shows the full key exactly once. If you close the dialog without copying, just delete it and make another.</div></li>
+      </ul>
+      <a class="wiz-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Open API Keys ↗</a>
+      <div class="wiz-note">Your key starts with <strong>sk-ant-</strong> and is a long string of characters. Treat it like a password — anyone with it can spend your credit.</div>
+      <div class="wiz-nav">
+        <button class="btn-ghost" onclick="wizGo(2)">← Back</button>
+        <div class="spacer"></div>
+        <button class="btn-primary" style="width:auto;" onclick="wizGo(4)">I Copied It →</button>
+      </div>
+      <div class="wiz-skip"><a onclick="wizSkip()">Skip for now</a></div>
+    </div>
+
+    <!-- STEP 4 — PASTE + VERIFY -->
+    <div class="wiz-step" id="wizStep-4">
+      <div class="wiz-eyebrow">Step 04 · Connect</div>
+      <h2>Paste &amp; Verify</h2>
+      <p class="wiz-body">I'll run a real test call against Anthropic to make sure it works before saving.</p>
+      <label class="f-label f-label-teal">Your Anthropic API Key</label>
+      <input type="password" class="f-input" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-family:var(--cs-mono);margin-bottom:8px;" onkeydown="if(event.key==='Enter')verifyAndSaveKey()">
+      <div style="font-size:11px;color:var(--cs-text-faint);margin-bottom:14px;line-height:1.6;">Stored in your browser's local storage only. It never reaches my servers — Prompt Studio doesn't have any.</div>
+      <div class="wiz-status" id="wizStatus"></div>
+      <button class="btn-primary" id="wizVerifyBtn" onclick="verifyAndSaveKey()"><span id="wizVerifyText">🔌 Verify &amp; Connect</span></button>
+      <div class="wiz-nav">
+        <button class="btn-ghost" onclick="wizGo(3)">← Back</button>
+        <div class="spacer"></div>
+      </div>
+      <div class="wiz-skip"><a onclick="wizSkip()">Skip — I'll do this later</a></div>
     </div>
   </div>
 </div>
@@ -1517,16 +1627,95 @@ function copyTextInline(btn, text) {
 // ═══════════════════════════════════════════════════════════
 try { const k = localStorage.getItem('cs_anthropic_api_key'); if(k) G.apiKey = k; } catch(e){}
 
-function openApiModal() { document.getElementById('apiModal').classList.add('visible'); }
-function closeApiModal() { document.getElementById('apiModal').classList.remove('visible'); }
-function saveApiKey() {
-  const k = document.getElementById('apiKeyInput').value.trim();
-  if (!k || !k.startsWith('sk-ant-')) { alert('Please paste a valid Anthropic API key (starts with sk-ant-)'); return; }
-  G.apiKey = k;
-  try { localStorage.setItem('cs_anthropic_api_key', k); } catch(e){}
-  updateApiDot();
-  document.getElementById('apiModal').classList.remove('visible');
+// ── API KEY SETUP WIZARD ──────────────────────────────────
+let wizStep = 1;
+function openApiModal() {
+  // Returning users with a key land on the paste step; new users start at the pitch
+  wizGo(G.apiKey ? 4 : 1);
+  document.getElementById('apiModal').classList.add('visible');
 }
+function closeApiModal() { document.getElementById('apiModal').classList.remove('visible'); }
+function wizSkip() { closeApiModal(); }
+function wizGo(n) {
+  wizStep = n;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('wizStep-' + i).classList.toggle('active', i === n);
+    const dot = document.getElementById('wizDot-' + i);
+    dot.classList.toggle('active', i === n);
+    dot.classList.toggle('done', i < n);
+  }
+  wizStatus('', null);
+}
+function wizStatus(msg, kind) {
+  const el = document.getElementById('wizStatus');
+  if (!el) return;
+  el.className = 'wiz-status' + (kind ? ' show ' + kind : '');
+  el.innerHTML = msg || '';
+}
+
+// Runs a minimal real request so the buyer finds out here, not mid-generation
+async function verifyAndSaveKey() {
+  const k = (document.getElementById('apiKeyInput').value || '').trim();
+  const btn = document.getElementById('wizVerifyBtn');
+  const txt = document.getElementById('wizVerifyText');
+
+  if (!k) { wizStatus('Paste your key first.', 'err'); return; }
+  if (!k.startsWith('sk-ant-')) {
+    wizStatus('That doesn\'t look like an Anthropic key — it should start with <strong>sk-ant-</strong>. Make sure you copied the whole thing.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  txt.innerHTML = '<span class="spinner"></span> Testing your key…';
+  wizStatus('', null);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': k,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] })
+    });
+
+    if (res.ok) {
+      G.apiKey = k;
+      try { localStorage.setItem('cs_anthropic_api_key', k); } catch(e){}
+      updateApiDot();
+      wizStatus('✓ Connected. Every mode is unlocked — you\'re ready to build.', 'ok');
+      txt.textContent = '✓ Connected';
+      setTimeout(closeApiModal, 1400);
+      return;
+    }
+
+    // Turn Anthropic's error into something a producer can act on
+    let detail = '';
+    try { detail = JSON.stringify(await res.json()); } catch(e) { detail = ''; }
+    let msg;
+    if (res.status === 401) {
+      msg = 'Anthropic rejected this key. It may be mistyped, revoked, or from a deleted account. Generate a fresh one in <strong>Settings → API Keys</strong> and paste it again.';
+    } else if (res.status === 400 && /credit|balance|billing/i.test(detail)) {
+      msg = 'The key works, but the account has <strong>no credit</strong>. Add $5 at <strong>Settings → Billing</strong>, then hit Verify again. (Claude Pro is separate — it doesn\'t fund API usage.)';
+    } else if (res.status === 429) {
+      msg = 'Rate limited right now. Wait about a minute and try again — the key itself looks fine.';
+    } else if (res.status === 403) {
+      msg = 'This key doesn\'t have permission for the Messages API. Create a standard key in <strong>Settings → API Keys</strong>.';
+    } else {
+      msg = 'Anthropic returned error ' + res.status + '. ' + (detail ? detail.slice(0, 160) : 'Try again in a moment.');
+    }
+    wizStatus(msg, 'err');
+  } catch (e) {
+    wizStatus('Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.', 'err');
+  } finally {
+    btn.disabled = false;
+    if (txt.textContent !== '✓ Connected') txt.innerHTML = '🔌 Verify &amp; Connect';
+  }
+}
+// Kept so any older call site still works
+function saveApiKey() { verifyAndSaveKey(); }
 function updateApiDot() {
   const dot = document.getElementById('apiDot');
   dot.style.color = G.apiKey ? 'var(--cs-teal)' : 'var(--cs-text-faint)';
