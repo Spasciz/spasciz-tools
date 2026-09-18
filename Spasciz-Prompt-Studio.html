@@ -390,6 +390,22 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .wiz-skip a{color:var(--cs-text-muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .wiz-skip a:hover{color:var(--cs-teal)}
 
+/* WIZARD — PROVIDER PICKER */
+.wiz-prov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.wiz-prov{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius-card);padding:14px 16px;cursor:pointer;transition:all .2s;color:var(--cs-text-muted)}
+.wiz-prov:hover{border-color:var(--cs-bg-border-hover)}
+.wiz-prov.selected{border-color:var(--cs-teal);background:rgba(79,224,196,.06)}
+.wiz-prov-name{font-family:var(--cs-mono);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cs-cream)}
+.wiz-prov.selected .wiz-prov-name{color:var(--cs-teal)}
+.wiz-prov-by{font-size:11px;color:var(--cs-text-faint)}
+.wiz-prov-status{font-family:var(--cs-mono);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--cs-text-faint);margin-top:4px;display:inline-block}
+.wiz-prov-status.on{color:var(--cs-teal)}
+.wiz-prov-status.active{color:var(--cs-accent)}
+.wiz-prov-remove{font-family:var(--cs-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--cs-text-faint);text-decoration:underline;text-underline-offset:2px;margin-left:10px;cursor:pointer}
+.wiz-prov-remove:hover{color:var(--cs-accent)}
+.wiz-pv{display:none}
+.wiz-pv.show{display:block}
+
 /* VOCAL ARCHITECT PRESET GROUPS */
 .va-group-label{font-family:var(--cs-mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cs-text-faint);margin:12px 0 6px}
 .va-group-label:first-child{margin-top:2px}
@@ -422,6 +438,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 @media (max-width:900px){
   .eng-grid{grid-template-columns:1fr}
   .cw-mode-toggle{grid-template-columns:1fr}
+  .wiz-prov-grid{grid-template-columns:1fr}
   .app-shell{grid-template-columns:1fr}
   .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--cs-bg-border)}
   .main-content{padding:24px 20px;max-height:none}
@@ -444,18 +461,14 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <div class="wiz-dot" id="wizDot-4"></div>
     </div>
 
-    <!-- STEP 1 — WHY -->
+    <!-- STEP 1 — CHOOSE ENGINE -->
     <div class="wiz-step active" id="wizStep-1">
-      <div class="wiz-eyebrow">Step 01 · How this works</div>
+      <div class="wiz-eyebrow">Step 01 · Choose your engine</div>
       <h2>You Own the Engine</h2>
-      <p class="wiz-body">Prompt Studio has <strong>no subscription and no servers</strong>. The AI features connect straight to Claude using <strong>your own API key</strong>, so you pay Anthropic directly at cost — nothing routed through me, no markup.</p>
-      <div class="wiz-cost">
-        <div class="wiz-cost-row"><span>One AI vocal script</span><span>~$0.02</span></div>
-        <div class="wiz-cost-row"><span>One Co-Write pass</span><span>~$0.02</span></div>
-        <div class="wiz-cost-row"><span>One stem prompt</span><span>~$0.01</span></div>
-        <div class="wiz-cost-row hi"><span>Anthropic free credit for new accounts</span><span>$5 = ~250 runs</span></div>
-      </div>
-      <div class="wiz-note"><strong>Already have a key?</strong> Jump straight to the last step and paste it.</div>
+      <p class="wiz-body">Prompt Studio has <strong>no subscription and no servers</strong>. The AI features run on <strong>your own API key</strong> — Claude or ChatGPT, your choice — so you pay the provider directly at cost. Nothing routed through me, no markup.</p>
+      <div class="wiz-prov-grid" id="wizProvGrid"></div>
+      <div class="wiz-cost" id="wizCostTable"></div>
+      <div class="wiz-note"><strong>Already have a key?</strong> Jump straight to the last step and paste it — Claude or OpenAI, it'll figure out which.</div>
       <div class="wiz-nav">
         <div class="spacer"></div>
         <button class="btn-ghost" onclick="wizGo(4)">I have a key →</button>
@@ -467,16 +480,29 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <!-- STEP 2 — ACCOUNT + BILLING -->
     <div class="wiz-step" id="wizStep-2">
       <div class="wiz-eyebrow">Step 02 · Account &amp; credit</div>
-      <h2>Create Your Anthropic Account</h2>
-      <p class="wiz-body">This is the account that powers your generations. Free to create.</p>
-      <ul class="wiz-list">
-        <li><span class="wiz-num">1</span><div>Open the Anthropic Console and sign up with your email.</div></li>
-        <li><span class="wiz-num">2</span><div>Verify your email and log in.</div></li>
-        <li><span class="wiz-num">3</span><div>Go to <strong>Settings → Billing</strong>. New accounts usually get <strong>$5 in free credit</strong> — that's roughly 250 generations, enough to run Prompt Studio for weeks before you pay anything.</div></li>
-        <li><span class="wiz-num">4</span><div>If you don't see free credit, add a card and load <strong>$5</strong>. That's the smallest amount and it lasts a long time.</div></li>
-      </ul>
-      <a class="wiz-link" href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener">Open Anthropic Billing ↗</a>
-      <div class="wiz-warn"><strong>Heads up:</strong> API credit is separate from a Claude.ai Pro subscription. Having Claude Pro does <em>not</em> give you API credit — you need credit on the Console side.</div>
+      <div class="wiz-pv" data-for="anthropic">
+        <h2>Create Your Anthropic Account</h2>
+        <p class="wiz-body">This is the account that powers your generations. Free to create.</p>
+        <ul class="wiz-list">
+          <li><span class="wiz-num">1</span><div>Open the Anthropic Console and sign up with your email.</div></li>
+          <li><span class="wiz-num">2</span><div>Verify your email and log in.</div></li>
+          <li><span class="wiz-num">3</span><div>Go to <strong>Settings → Billing</strong>. New accounts usually get <strong>$5 in free credit</strong> — that's roughly 250 generations, enough to run Prompt Studio for weeks before you pay anything.</div></li>
+          <li><span class="wiz-num">4</span><div>If you don't see free credit, add a card and load <strong>$5</strong>. That's the smallest amount and it lasts a long time.</div></li>
+        </ul>
+        <a class="wiz-link" href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener">Open Anthropic Billing ↗</a>
+        <div class="wiz-warn"><strong>Heads up:</strong> API credit is separate from a Claude.ai Pro subscription. Having Claude Pro does <em>not</em> give you API credit — you need credit on the Console side.</div>
+      </div>
+      <div class="wiz-pv" data-for="openai">
+        <h2>Set Up OpenAI API Billing</h2>
+        <p class="wiz-body">Use the OpenAI Platform — the developer side of OpenAI. Your ChatGPT login works there too.</p>
+        <ul class="wiz-list">
+          <li><span class="wiz-num">1</span><div>Open the OpenAI Platform and sign in, or sign up with your email.</div></li>
+          <li><span class="wiz-num">2</span><div>Go to <strong>Settings → Billing</strong> and add a payment method.</div></li>
+          <li><span class="wiz-num">3</span><div>Add prepaid credit. <strong>$5</strong> goes a long way — roughly 125+ generations.</div></li>
+        </ul>
+        <a class="wiz-link" href="https://platform.openai.com/settings/organization/billing/overview" target="_blank" rel="noopener">Open OpenAI Billing ↗</a>
+        <div class="wiz-warn"><strong>Heads up:</strong> a ChatGPT Plus or Pro subscription does <em>not</em> include API credit. API usage is billed separately on the Platform, so you need credit there even if you pay for ChatGPT.</div>
+      </div>
       <div class="wiz-nav">
         <button class="btn-ghost" onclick="wizGo(1)">← Back</button>
         <div class="spacer"></div>
@@ -489,14 +515,25 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <div class="wiz-step" id="wizStep-3">
       <div class="wiz-eyebrow">Step 03 · Generate the key</div>
       <h2>Create Your API Key</h2>
-      <p class="wiz-body">One key is all you need. It works forever until you delete it.</p>
-      <ul class="wiz-list">
-        <li><span class="wiz-num">1</span><div>Open <strong>Settings → API Keys</strong> in the Console.</div></li>
-        <li><span class="wiz-num">2</span><div>Click <strong>Create Key</strong>. Name it something you'll recognize — "Prompt Studio" works.</div></li>
-        <li><span class="wiz-num">3</span><div><strong>Copy it immediately.</strong> Anthropic shows the full key exactly once. If you close the dialog without copying, just delete it and make another.</div></li>
-      </ul>
-      <a class="wiz-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Open API Keys ↗</a>
-      <div class="wiz-note">Your key starts with <strong>sk-ant-</strong> and is a long string of characters. Treat it like a password — anyone with it can spend your credit.</div>
+      <p class="wiz-body">One key is all you need. It works until you delete it.</p>
+      <div class="wiz-pv" data-for="anthropic">
+        <ul class="wiz-list">
+          <li><span class="wiz-num">1</span><div>Open <strong>Settings → API Keys</strong> in the Console.</div></li>
+          <li><span class="wiz-num">2</span><div>Click <strong>Create Key</strong>. Name it something you'll recognize — "Prompt Studio" works.</div></li>
+          <li><span class="wiz-num">3</span><div><strong>Copy it immediately.</strong> Anthropic shows the full key exactly once. If you close the dialog without copying, just delete it and make another.</div></li>
+        </ul>
+        <a class="wiz-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Open API Keys ↗</a>
+        <div class="wiz-note">Your key starts with <strong>sk-ant-</strong> and is a long string of characters. Treat it like a password — anyone with it can spend your credit.</div>
+      </div>
+      <div class="wiz-pv" data-for="openai">
+        <ul class="wiz-list">
+          <li><span class="wiz-num">1</span><div>Open <strong>API keys</strong> in the OpenAI Platform.</div></li>
+          <li><span class="wiz-num">2</span><div>Click <strong>Create new secret key</strong>, name it "Prompt Studio", and leave <strong>Permissions</strong> on <strong>All</strong> — restricted keys can block the models Prompt Studio needs.</div></li>
+          <li><span class="wiz-num">3</span><div><strong>Copy it immediately.</strong> OpenAI shows the full key exactly once.</div></li>
+        </ul>
+        <a class="wiz-link" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">Open API Keys ↗</a>
+        <div class="wiz-note">Your key starts with <strong>sk-</strong> (usually <strong>sk-proj-</strong>). Treat it like a password — anyone with it can spend your credit.</div>
+      </div>
       <div class="wiz-nav">
         <button class="btn-ghost" onclick="wizGo(2)">← Back</button>
         <div class="spacer"></div>
@@ -509,9 +546,9 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <div class="wiz-step" id="wizStep-4">
       <div class="wiz-eyebrow">Step 04 · Connect</div>
       <h2>Paste &amp; Verify</h2>
-      <p class="wiz-body">I'll run a real test call against Anthropic to make sure it works before saving.</p>
-      <label class="f-label f-label-teal">Your Anthropic API Key</label>
-      <input type="password" class="f-input" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-family:var(--cs-mono);margin-bottom:8px;" onkeydown="if(event.key==='Enter')verifyAndSaveKey()">
+      <p class="wiz-body">Paste a Claude or OpenAI key — Prompt Studio detects which one it is and runs a real test call before saving.</p>
+      <label class="f-label f-label-teal">Your API Key</label>
+      <input type="password" class="f-input" id="apiKeyInput" placeholder="sk-ant-…  or  sk-proj-…" style="font-family:var(--cs-mono);margin-bottom:8px;" onkeydown="if(event.key==='Enter')verifyAndSaveKey()">
       <div style="font-size:11px;color:var(--cs-text-faint);margin-bottom:14px;line-height:1.6;">Stored in your browser's local storage only. It never reaches my servers — Prompt Studio doesn't have any.</div>
       <div class="wiz-status" id="wizStatus"></div>
       <button class="btn-primary" id="wizVerifyBtn" onclick="verifyAndSaveKey()"><span id="wizVerifyText">🔌 Verify &amp; Connect</span></button>
@@ -549,7 +586,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <span>◷</span> History <span class="history-count" id="historyCount" style="display:none;">0</span>
     </button>
     <button class="hdr-btn" id="apiKeyBtn" onclick="openApiModal()">
-      <span class="api-dot" id="apiDot">●</span> API Key
+      <span class="api-dot" id="apiDot">●</span> <span id="apiKeyLabel">API Key</span>
     </button>
     <button class="hdr-btn" onclick="resetAll()">Reset</button>
   </div>
@@ -1157,7 +1194,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       </div>
 
       <div class="warn-banner info-banner" id="cwApiWarn" style="display:none;">
-        <span>🔑</span><span>Add your Anthropic API key in the header to use AI Co-Write.</span>
+        <span>🔑</span><span>Connect a Claude or ChatGPT API key (header → API Key) to use AI Co-Write.</span>
       </div>
 
       <div class="cw-mode-toggle">
@@ -1357,7 +1394,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 // ═══════════════════════════════════════════════════════════
 // GLOBAL STATE
 // ═══════════════════════════════════════════════════════════
-let G = { apiKey: '', platform: 'Suno' };
+let G = { keys: { anthropic: '', openai: '' }, provider: 'anthropic', openaiModel: '', platform: 'Suno' };
 
 const PLATFORM_DATA = {
   'Suno': { tip: 'In Suno Custom Mode, add [instrumental] in the lyrics box to suppress vocals.', link: 'https://suno.com/create', create: 'Use Custom Mode. Type [instrumental] in the lyrics field to suppress all vocals.' },
@@ -1620,7 +1657,7 @@ async function generateVariations(basePrompt, targetContainerId, opts) {
   const ctx = opts.context || '';
   const mode = opts.mode || 'Prompt';
   try {
-    const text = await callClaude(`You are a prompt engineer for AI music platforms. Given the ORIGINAL PROMPT below, produce 3 ALTERNATIVE VERSIONS optimized for ${G.platform}. Each variation should take a distinctly different creative angle (e.g. minimalist / dense / cinematic; or different feel/energy) while preserving the core intent. Output ONLY the 3 prompts, separated by three dashes on their own line: ---
+    const text = await callAI(`You are a prompt engineer for AI music platforms. Given the ORIGINAL PROMPT below, produce 3 ALTERNATIVE VERSIONS optimized for ${G.platform}. Each variation should take a distinctly different creative angle (e.g. minimalist / dense / cinematic; or different feel/energy) while preserving the core intent. Output ONLY the 3 prompts, separated by three dashes on their own line: ---
 
 ORIGINAL PROMPT:
 ${basePrompt}
@@ -1656,15 +1693,75 @@ function copyTextInline(btn, text) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// API KEY
+// AI PROVIDERS — the buyer brings their own Claude or ChatGPT key
 // ═══════════════════════════════════════════════════════════
-try { const k = localStorage.getItem('cs_anthropic_api_key'); if(k) G.apiKey = k; } catch(e){}
+const ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+// Preference order. Current OpenAI models are reasoning models: they need max_completion_tokens and
+// reasoning_effort, and their hidden reasoning spends the same token budget as the visible answer.
+const OPENAI_MODELS = [
+  { id:'gpt-5.6-terra', reasoning:true  },   // OpenAI's balanced cost/quality pick
+  { id:'gpt-5.6-luna',  reasoning:true  },
+  { id:'gpt-6-astra',   reasoning:true  },
+  { id:'gpt-5.6-sol',   reasoning:true  },
+  { id:'gpt-4.1',       reasoning:false },   // fallbacks for accounts without the current models
+  { id:'gpt-4o',        reasoning:false }
+];
+const OPENAI_REASONING_HEADROOM = 12000;
+const PROVIDERS = {
+  anthropic: { name:'Claude',  by:'Anthropic', storage:'cs_anthropic_api_key' },
+  openai:    { name:'ChatGPT', by:'OpenAI',    storage:'cs_openai_api_key' }
+};
+try {
+  for (const p of Object.keys(PROVIDERS)) G.keys[p] = localStorage.getItem(PROVIDERS[p].storage) || '';
+  G.openaiModel = localStorage.getItem('cs_openai_model') || '';
+  const saved = localStorage.getItem('cs_ai_provider');
+  if (saved && PROVIDERS[saved]) G.provider = saved;
+} catch(e){}
+normalizeProvider();
+
+function hasKey(p) { return !!G.keys[p]; }
+function hasActiveKey() { return hasKey(G.provider); }
+function hasAnyKey() { return Object.keys(PROVIDERS).some(hasKey); }
+// If the active provider has no key but the other one does, switch to the one that works
+function normalizeProvider() {
+  if (!hasKey(G.provider)) { const other = Object.keys(PROVIDERS).find(hasKey); if (other) G.provider = other; }
+}
+function detectProvider(k) {
+  if (k.startsWith('sk-ant-')) return 'anthropic';
+  if (k.startsWith('sk-')) return 'openai';
+  return null;
+}
+function setActiveProvider(p) {
+  if (!hasKey(p)) return;
+  G.provider = p;
+  try { localStorage.setItem('cs_ai_provider', p); } catch(e){}
+  updateApiDot(); wizRenderProviders();
+}
+function saveProviderKey(p, k) {
+  G.keys[p] = k; G.provider = p;
+  try { localStorage.setItem(PROVIDERS[p].storage, k); localStorage.setItem('cs_ai_provider', p); } catch(e){}
+  updateApiDot();
+}
+function removeProviderKey(p) {
+  if (!confirm(`Remove your ${PROVIDERS[p].name} key from this browser?`)) return;
+  G.keys[p] = '';
+  try { localStorage.removeItem(PROVIDERS[p].storage); if (p === 'openai') localStorage.removeItem('cs_openai_model'); } catch(e){}
+  if (p === 'openai') G.openaiModel = '';
+  normalizeProvider();
+  try { localStorage.setItem('cs_ai_provider', G.provider); } catch(e){}
+  updateApiDot(); wizRenderProviders();
+}
 
 // ── API KEY SETUP WIZARD ──────────────────────────────────
 let wizStep = 1;
+let wizProvider = G.provider;   // which provider's setup steps the wizard is showing
+const WIZ_COSTS = {
+  anthropic: [['One AI vocal script','~$0.02'],['One Co-Write pass','~$0.02'],['One stem prompt','~$0.01'],['Anthropic free credit for new accounts','$5 = ~250 runs']],
+  openai:    [['One AI vocal script','~$0.04'],['One Co-Write pass','~$0.04'],['One stem prompt','~$0.01'],['$5 of OpenAI prepaid credit','= ~125+ runs']]
+};
 function openApiModal() {
-  // Returning users with a key land on the paste step; new users start at the pitch
-  wizGo(G.apiKey ? 4 : 1);
+  wizProvider = G.provider;
+  wizGo(1);
   document.getElementById('apiModal').classList.add('visible');
 }
 function closeApiModal() { document.getElementById('apiModal').classList.remove('visible'); }
@@ -1678,6 +1775,30 @@ function wizGo(n) {
     dot.classList.toggle('done', i < n);
   }
   wizStatus('', null);
+  wizRenderProviders();
+}
+function wizPickProvider(p) {
+  wizProvider = p;
+  if (hasKey(p)) setActiveProvider(p);   // picking a connected provider makes it the active engine
+  wizRenderProviders();
+}
+// Provider cards, cost table, and which provider's steps 2–3 are visible
+function wizRenderProviders() {
+  const grid = document.getElementById('wizProvGrid');
+  if (grid) grid.innerHTML = Object.entries(PROVIDERS).map(([p, info]) => {
+    const connected = hasKey(p), active = connected && G.provider === p;
+    const status = active ? '<span class="wiz-prov-status active">● Connected · Active</span>'
+                 : connected ? '<span class="wiz-prov-status on">✓ Connected · tap to use</span>'
+                 : '<span class="wiz-prov-status">Not connected</span>';
+    const remove = connected ? `<span class="wiz-prov-remove" onclick="event.stopPropagation();removeProviderKey('${p}')">Remove</span>` : '';
+    return `<div class="wiz-prov${wizProvider === p ? ' selected' : ''}" role="button" tabindex="0" onclick="wizPickProvider('${p}')" onkeydown="if(event.key==='Enter')wizPickProvider('${p}')">
+      <span class="wiz-prov-name">${info.name}</span><span class="wiz-prov-by">by ${info.by}</span>
+      <span>${status}${remove}</span></div>`;
+  }).join('');
+  const cost = document.getElementById('wizCostTable');
+  if (cost) cost.innerHTML = WIZ_COSTS[wizProvider].map(([l, v], i, a) =>
+    `<div class="wiz-cost-row${i === a.length - 1 ? ' hi' : ''}"><span>${l}</span><span>${v}</span></div>`).join('');
+  document.querySelectorAll('.wiz-pv').forEach(el => el.classList.toggle('show', el.dataset.for === wizProvider));
 }
 function wizStatus(msg, kind) {
   const el = document.getElementById('wizStatus');
@@ -1686,81 +1807,106 @@ function wizStatus(msg, kind) {
   el.innerHTML = msg || '';
 }
 
-// Runs a minimal real request so the buyer finds out here, not mid-generation
+// Runs a minimal real request so the buyer finds out here, not mid-generation.
+// Provider is detected from the key itself, so either kind of key can be pasted.
 async function verifyAndSaveKey() {
   const k = (document.getElementById('apiKeyInput').value || '').trim();
   const btn = document.getElementById('wizVerifyBtn');
   const txt = document.getElementById('wizVerifyText');
-
   if (!k) { wizStatus('Paste your key first.', 'err'); return; }
-  if (!k.startsWith('sk-ant-')) {
-    wizStatus('That doesn\'t look like an Anthropic key — it should start with <strong>sk-ant-</strong>. Make sure you copied the whole thing.', 'err');
+  const p = detectProvider(k);
+  if (!p) {
+    wizStatus('That doesn\'t look like an API key. Claude keys start with <strong>sk-ant-</strong> and OpenAI keys start with <strong>sk-</strong> (usually <strong>sk-proj-</strong>). Make sure you copied the whole thing.', 'err');
     return;
   }
-
   btn.disabled = true;
-  txt.innerHTML = '<span class="spinner"></span> Testing your key…';
+  txt.innerHTML = `<span class="spinner"></span> Testing your ${PROVIDERS[p].name} key…`;
   wizStatus('', null);
-
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': k,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] })
-    });
-
-    if (res.ok) {
-      G.apiKey = k;
-      try { localStorage.setItem('cs_anthropic_api_key', k); } catch(e){}
-      updateApiDot();
-      wizStatus('✓ Connected. Every mode is unlocked — you\'re ready to build.', 'ok');
-      txt.textContent = '✓ Connected';
-      setTimeout(closeApiModal, 1400);
-      return;
-    }
-
-    // Turn Anthropic's error into something a producer can act on
-    let detail = '';
-    try { detail = JSON.stringify(await res.json()); } catch(e) { detail = ''; }
-    let msg;
-    if (res.status === 401) {
-      msg = 'Anthropic rejected this key. It may be mistyped, revoked, or from a deleted account. Generate a fresh one in <strong>Settings → API Keys</strong> and paste it again.';
-    } else if (res.status === 400 && /credit|balance|billing/i.test(detail)) {
-      msg = 'The key works, but the account has <strong>no credit</strong>. Add $5 at <strong>Settings → Billing</strong>, then hit Verify again. (Claude Pro is separate — it doesn\'t fund API usage.)';
-    } else if (res.status === 429) {
-      msg = 'Rate limited right now. Wait about a minute and try again — the key itself looks fine.';
-    } else if (res.status === 403) {
-      msg = 'This key doesn\'t have permission for the Messages API. Create a standard key in <strong>Settings → API Keys</strong>.';
-    } else {
-      msg = 'Anthropic returned error ' + res.status + '. ' + (detail ? detail.slice(0, 160) : 'Try again in a moment.');
-    }
-    wizStatus(msg, 'err');
-  } catch (e) {
-    wizStatus('Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.', 'err');
+    const result = p === 'openai' ? await verifyOpenAIKey(k) : await verifyAnthropicKey(k);
+    if (!result.ok) { wizStatus(result.msg, 'err'); return; }
+    saveProviderKey(p, k);
+    document.getElementById('apiKeyInput').value = '';
+    wizProvider = p; wizRenderProviders();
+    wizStatus(`✓ Connected to ${PROVIDERS[p].name}${result.detail ? ' (' + result.detail + ')' : ''}. Every mode is unlocked — you're ready to build.`, 'ok');
+    txt.textContent = '✓ Connected';
+    setTimeout(() => { closeApiModal(); txt.innerHTML = '🔌 Verify &amp; Connect'; }, 1600);
   } finally {
     btn.disabled = false;
     if (txt.textContent !== '✓ Connected') txt.innerHTML = '🔌 Verify &amp; Connect';
   }
 }
-// Kept so any older call site still works
-function saveApiKey() { verifyAndSaveKey(); }
+
+async function verifyAnthropicKey(k) {
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': k, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] })
+    });
+  } catch (e) {
+    return { ok:false, msg:'Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.' };
+  }
+  if (res.ok) return { ok:true };
+  let detail = '';
+  try { detail = JSON.stringify(await res.json()); } catch(e) {}
+  if (res.status === 401) return { ok:false, msg:'Anthropic rejected this key. It may be mistyped, revoked, or from a deleted account. Generate a fresh one in <strong>Settings → API Keys</strong> and paste it again.' };
+  if (res.status === 400 && /credit|balance|billing/i.test(detail)) return { ok:false, msg:'The key works, but the account has <strong>no credit</strong>. Add $5 at <strong>Settings → Billing</strong>, then hit Verify again. (Claude Pro is separate — it doesn\'t fund API usage.)' };
+  if (res.status === 429) return { ok:false, msg:'Rate limited right now. Wait about a minute and try again — the key itself looks fine.' };
+  if (res.status === 403) return { ok:false, msg:'This key doesn\'t have permission for the Messages API. Create a standard key in <strong>Settings → API Keys</strong>.' };
+  return { ok:false, msg:'Anthropic returned error ' + res.status + '. ' + (detail ? detail.slice(0, 160) : 'Try again in a moment.') };
+}
+
+// Two-stage check. OpenAI returns readable (CORS-enabled) errors on GET /v1/models but NOT on POST
+// errors — a failed POST just shows up as a network error. So the key is judged on the models call,
+// and the account's available models tell us which one to use; the POST then confirms it can generate.
+async function verifyOpenAIKey(k) {
+  let res;
+  try {
+    res = await fetch('https://api.openai.com/v1/models', { headers: { Authorization: 'Bearer ' + k } });
+  } catch (e) {
+    return { ok:false, msg:'Couldn\'t reach OpenAI — check your internet connection, or whether a VPN/ad-blocker is blocking api.openai.com. Your key was not saved.' };
+  }
+  if (res.status === 401) return { ok:false, msg:'OpenAI rejected this key. It may be mistyped or revoked. Create a fresh one at <strong>platform.openai.com → API keys</strong> and paste it again.' };
+  if (res.status === 403) return { ok:false, msg:'This key is restricted and can\'t read models. Create a new key with <strong>Permissions: All</strong>.' };
+  if (res.status === 429) return { ok:false, msg:'Rate limited right now. Wait about a minute and try again — the key itself looks fine.' };
+  if (!res.ok) return { ok:false, msg:'OpenAI returned error ' + res.status + '. Try again in a moment.' };
+  let ids = [];
+  try { ids = ((await res.json()).data || []).map(m => m.id); } catch(e) {}
+  const pick = OPENAI_MODELS.find(m => ids.includes(m.id));
+  if (!pick) return { ok:false, msg:'Your key works, but this OpenAI account doesn\'t have access to a supported GPT model yet. New accounts sometimes need to add credit first — check <strong>Settings → Billing</strong>, then verify again.' };
+  try {
+    await openAIRequest(k, pick, 'hi', 64, true);
+  } catch (e) {
+    return { ok:false, msg: e.message };
+  }
+  G.openaiModel = pick.id;
+  try { localStorage.setItem('cs_openai_model', pick.id); } catch(e){}
+  return { ok:true, detail: pick.id };
+}
+
 function updateApiDot() {
   const dot = document.getElementById('apiDot');
-  dot.style.color = G.apiKey ? 'var(--cs-teal)' : 'var(--cs-text-faint)';
+  const label = document.getElementById('apiKeyLabel');
+  if (dot) dot.style.color = hasActiveKey() ? 'var(--cs-teal)' : 'var(--cs-text-faint)';
+  if (label) label.textContent = hasActiveKey() ? PROVIDERS[G.provider].name : 'API Key';
+  const cw = document.getElementById('cwApiWarn');
+  if (cw && document.getElementById('panel-cowrite').classList.contains('active')) cw.style.display = hasActiveKey() ? 'none' : 'flex';
 }
 updateApiDot();
 
-async function callClaude(prompt, maxTokens = 2000) {
-  if (!G.apiKey) { openApiModal(); throw new Error('API key required'); }
+// ── CALLS ─────────────────────────────────────────────────
+async function callAI(prompt, maxTokens = 2000) {
+  normalizeProvider();
+  if (!hasActiveKey()) { openApiModal(); throw new Error('API key required'); }
+  return G.provider === 'openai' ? callOpenAI(prompt, maxTokens) : callAnthropic(prompt, maxTokens);
+}
+async function callAnthropic(prompt, maxTokens) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': G.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
+    headers: { 'Content-Type': 'application/json', 'x-api-key': G.keys.anthropic, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
   });
   if (!res.ok) { const t = await res.text(); throw new Error('API ' + res.status + ': ' + t.slice(0,150)); }
   const data = await res.json();
@@ -1768,8 +1914,39 @@ async function callClaude(prompt, maxTokens = 2000) {
   if (!text) throw new Error('Empty response');
   return text;
 }
-async function callClaudeJSON(prompt, maxTokens = 2000) {
-  const text = await callClaude(prompt, maxTokens);
+async function callOpenAI(prompt, maxTokens) {
+  const model = OPENAI_MODELS.find(m => m.id === G.openaiModel) || OPENAI_MODELS[0];
+  return openAIRequest(G.keys.openai, model, prompt, maxTokens, false);
+}
+async function openAIRequest(key, model, prompt, maxTokens, isVerify) {
+  const body = { model: model.id, messages: [{ role: 'user', content: prompt }],
+                 max_completion_tokens: model.reasoning ? maxTokens + (isVerify ? 256 : OPENAI_REASONING_HEADROOM) : maxTokens };
+  if (model.reasoning) body.reasoning_effort = 'low';
+  let res;
+  try {
+    res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify(body)
+    });
+  } catch (e) {
+    // OpenAI's POST errors carry no CORS header, so the browser reports every one as a network failure.
+    // The key already passed the models check, so by far the likeliest cause is no API credit.
+    throw new Error('OpenAI wouldn\'t complete the request. This almost always means the account has no API credit — add credit at platform.openai.com → Settings → Billing (ChatGPT Plus doesn\'t count), then try again. A VPN or ad-blocker blocking api.openai.com can also cause this.');
+  }
+  if (!res.ok) {
+    let t = ''; try { t = await res.text(); } catch(e) {}
+    if (res.status === 429 && /quota/i.test(t)) throw new Error('Your OpenAI account is out of API credit. Add credit at platform.openai.com → Settings → Billing, then try again.');
+    throw new Error('OpenAI ' + res.status + ': ' + t.slice(0, 150));
+  }
+  if (isVerify) return 'ok';
+  const data = await res.json();
+  const choice = data.choices && data.choices[0];
+  const text = choice && choice.message && choice.message.content;
+  if (!text) throw new Error(choice && choice.finish_reason === 'length'
+    ? 'OpenAI ran out of room before finishing — try again.' : 'OpenAI returned an empty response — try again.');
+  return text;
+}
+async function callAIJSON(prompt, maxTokens = 2000) {
+  const text = await callAI(prompt, maxTokens);
   let clean = text.replace(/```json/gi,'').replace(/```/g,'').trim();
   const f = clean.indexOf('{'), l = clean.lastIndexOf('}');
   if (f !== -1 && l > f) clean = clean.slice(f, l+1);
@@ -1796,7 +1973,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + tab.dataset.mode).classList.add('active');
     if (tab.dataset.mode === 'cowrite') {
-      document.getElementById('cwApiWarn').style.display = G.apiKey ? 'none' : 'flex';
+      document.getElementById('cwApiWarn').style.display = hasActiveKey() ? 'none' : 'flex';
     }
   });
 });
@@ -2053,7 +2230,7 @@ RULES: Write ORIGINAL lyrics only. Every section starts with bracket tags: [Vers
 Respond with ONLY valid JSON, no markdown:
 {"title":"string","title_alternates":["string","string"],"style_prompt":"string under 200 chars","vocal_prompt_breakdown":"string","lyrics_script":"string with \\n line breaks","character_count":number,"producer_notes":"string"}`;
   try {
-    const out = await callClaudeJSON(prompt, 2200);
+    const out = await callAIJSON(prompt, 2200);
     renderFSOutput(out);
   } catch(e) {
     errEl.textContent = e.message; errEl.style.display='block';
@@ -2136,7 +2313,7 @@ async function generateInstPrompt() {
   btn.disabled = true; document.getElementById('instPromptOutput').style.display = 'none';
   const pd = PLATFORM_DATA[G.platform] || PLATFORM_DATA['Universal'];
   try {
-    const text = await callClaude(`You are an AI music instrumental prompt engineer. Generate a vocals-free prompt for ${G.platform} AND a rationale.
+    const text = await callAI(`You are an AI music instrumental prompt engineer. Generate a vocals-free prompt for ${G.platform} AND a rationale.
 FORMAT:
 PROMPT: [70-100 words. Start with [Instrumental]. Include instruments, BPM, key, lead style, mood, no-vocals directive. Optimize for ${G.platform}: ${pd.tip}]
 RATIONALE: [1-2 sentences, producer tone]
@@ -2260,7 +2437,7 @@ async function generateStemPrompt() {
   document.getElementById('stemGenBtnText').innerHTML='<span class="spinner"></span> Building…';
   btn.disabled=true; document.getElementById('stemPreviewBox').style.display='none';
   try {
-    const text = await callClaude(`You are an AI music stem prompt engineer. Generate a precise, production-ready prompt for ONE stem optimized for ${stemState.platform}. Start with stem name in brackets. Include BPM and key. Describe how THIS stem performs — role, feel, articulation, mix placement. For vocals: include style, tone, lyric direction. 40-70 words max. Output ONLY the prompt, nothing else.
+    const text = await callAI(`You are an AI music stem prompt engineer. Generate a precise, production-ready prompt for ONE stem optimized for ${stemState.platform}. Start with stem name in brackets. Include BPM and key. Describe how THIS stem performs — role, feel, articulation, mix placement. For vocals: include style, tone, lyric direction. 40-70 words max. Output ONLY the prompt, nothing else.
 
 Stem: ${stemState.currentInst}
 Category: ${stemState.currentCat}
@@ -2532,7 +2709,7 @@ Respond with ONLY valid JSON, no markdown:
 
 Generate 3 distinct suggestion options.`;
   try {
-    const out = await callClaudeJSON(prompt, 2200);
+    const out = await callAIJSON(prompt, 2200);
     renderCWOutput(out);
   } catch(e) {
     errEl.textContent=e.message; errEl.style.display='block';
@@ -2567,7 +2744,7 @@ RULES: Start every section with a bracket tag ([Verse 1], [Chorus], [Bridge], et
 Respond with ONLY valid JSON, no markdown:
 {"title":"string","title_alternates":["string","string"],"lyrics":"string with \\n line breaks and [Section] tags","approach":"1-2 sentences on the angle and rhyme strategy you chose"}`;
   try {
-    const out = await callClaudeJSON(prompt, 2200);
+    const out = await callAIJSON(prompt, 2200);
     if (!out || !out.lyrics) throw new Error('No lyrics came back — try again.');
     CW.lastAI = out;
     renderAILyricsOutput(out);
@@ -2660,7 +2837,7 @@ async function relGeneratePrompt() {
   btn.disabled=true; document.getElementById('relPromptOutput').style.display='none';
   const moodStr = relState.moods.length ? relState.moods.join(', ') : 'versatile';
   try {
-    relState.prompt = await callClaude(`You are Spasciz's Suno prompt engineer. Generate a single, highly optimized Suno AI music prompt.
+    relState.prompt = await callAI(`You are Spasciz's Suno prompt engineer. Generate a single, highly optimized Suno AI music prompt.
 
 FORMAT:
 - Start with the genre tag in brackets e.g. [Lo-Fi Hip Hop]
@@ -2761,10 +2938,9 @@ window.addEventListener('DOMContentLoaded', () => {
   renderRelGenreSelect();
   renderAllEngineerPanels();
   updateHistoryCount();
-  // API key input pre-fill
-  document.getElementById('apiKeyInput').value = G.apiKey;
-  // Show API modal if no key
-  if (!G.apiKey) openApiModal();
+  updateApiDot();
+  // Show the setup wizard if no provider is connected yet
+  if (!hasAnyKey()) openApiModal();
   // Esc closes history panel
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeHistoryPanel(); });
 });
