@@ -390,6 +390,18 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .wiz-skip a{color:var(--cs-text-muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .wiz-skip a:hover{color:var(--cs-teal)}
 
+/* CO-WRITE MODE SWITCH */
+.cw-mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.cw-mode-btn{display:flex;flex-direction:column;align-items:flex-start;gap:7px;text-align:left;background:var(--cs-bg-card);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius-card);padding:18px 20px;cursor:pointer;transition:all .25s;font-family:var(--cs-font);color:var(--cs-text-muted)}
+.cw-mode-btn:hover{border-color:var(--cs-bg-border-hover);transform:translateY(-2px)}
+.cw-mode-btn.active[data-cwmode="personal"]{border-color:var(--cs-accent);background:rgba(232,112,90,.08)}
+.cw-mode-btn.active[data-cwmode="ai"]{border-color:var(--cs-teal);background:rgba(79,224,196,.07)}
+.cw-mode-icon{font-size:22px;line-height:1}
+.cw-mode-name{font-family:var(--cs-mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cs-cream)}
+.cw-mode-btn.active[data-cwmode="personal"] .cw-mode-name{color:var(--cs-accent)}
+.cw-mode-btn.active[data-cwmode="ai"] .cw-mode-name{color:var(--cs-teal)}
+.cw-mode-desc{font-size:12px;line-height:1.5;color:var(--cs-text-muted)}
+
 /* ENGINEER PANEL */
 .eng-card{background:linear-gradient(180deg,rgba(79,224,196,.045) 0%,var(--cs-bg-card) 60%);border:1px solid rgba(79,224,196,.22);border-radius:var(--cs-radius-card);padding:24px;margin-bottom:16px}
 .eng-presets{padding:14px 16px;background:rgba(79,224,196,.04);border:1px dashed rgba(79,224,196,.25);border-radius:var(--cs-radius);margin-bottom:20px}
@@ -404,6 +416,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 /* MOBILE */
 @media (max-width:900px){
   .eng-grid{grid-template-columns:1fr}
+  .cw-mode-toggle{grid-template-columns:1fr}
   .app-shell{grid-template-columns:1fr}
   .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--cs-bg-border)}
   .main-content{padding:24px 20px;max-height:none}
@@ -576,7 +589,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <span style="color:var(--cs-accent);">●</span> Instrumental — no vocal prompts<br>
       <span style="color:var(--cs-teal);">●</span> Stems — layer by layer<br>
       <span style="color:var(--cs-teal);">●</span> Lyrics — write manually<br>
-      <span style="color:var(--cs-accent);">●</span> Co-Write — AI lyric help<br>
+      <span style="color:var(--cs-accent);">●</span> Co-Write — your lyrics or AI's<br>
       <span style="color:var(--cs-teal);">●</span> Release — post workflow
     </div>
   </aside>
@@ -750,6 +763,10 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <button class="inst-btn" onclick="toggleInst(this,'Pad Synth')"><span class="iicon">🌊</span>Pad Synth</button>
           <button class="inst-btn" onclick="toggleInst(this,'Organ')"><span class="iicon">⛪</span>Organ</button>
           <button class="inst-btn" onclick="toggleInst(this,'Arp Synth')"><span class="iicon">🔁</span>Arp Synth</button>
+          <button class="inst-btn" onclick="toggleInst(this,'String Pad')"><span class="iicon">🎻</span>String Pad</button>
+          <button class="inst-btn" onclick="toggleInst(this,'Synth Strings')"><span class="iicon">🎛️</span>Synth Strings</button>
+          <button class="inst-btn" onclick="toggleInst(this,'Staccato Strings')"><span class="iicon">🎻</span>Staccato Strings</button>
+          <button class="inst-btn" onclick="toggleInst(this,'Pizzicato Strings')"><span class="iicon">🎻</span>Pizzicato Strings</button>
         </div>
         <div class="inst-section-label">🎸 Strings & Plucked</div>
         <div class="inst-grid">
@@ -978,6 +995,10 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
             <button class="inst-pick-btn" onclick="pickStemInst(this,'🔁','Arp Synth','keys')"><span class="pick-icon">🔁</span>Arp Synth</button>
             <button class="inst-pick-btn" onclick="pickStemInst(this,'🎹','Elec. Piano','keys')"><span class="pick-icon">🎹</span>Elec. Piano</button>
             <button class="inst-pick-btn" onclick="pickStemInst(this,'🎼','Harpsichord','keys')"><span class="pick-icon">🎼</span>Harpsichord</button>
+            <button class="inst-pick-btn" onclick="pickStemInst(this,'🎻','String Pad','keys')"><span class="pick-icon">🎻</span>String Pad</button>
+            <button class="inst-pick-btn" onclick="pickStemInst(this,'🎛️','Synth Strings','keys')"><span class="pick-icon">🎛️</span>Synth Strings</button>
+            <button class="inst-pick-btn" onclick="pickStemInst(this,'🎻','Staccato Strings','keys')"><span class="pick-icon">🎻</span>Staccato Strings</button>
+            <button class="inst-pick-btn" onclick="pickStemInst(this,'🎻','Pizzicato Strings','keys')"><span class="pick-icon">🎻</span>Pizzicato Strings</button>
           </div>
           <div id="stemCat-strings" class="inst-pick-grid" style="display:none;">
             <button class="inst-pick-btn" onclick="pickStemInst(this,'🎸','Guitar','strings')"><span class="pick-icon">🎸</span>Guitar</button>
@@ -1121,14 +1142,41 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <div class="mode-panel" id="panel-cowrite">
       <div class="mode-header">
         <h1 class="mode-title">AI <span class="accent">Co-Write</span></h1>
-        <p class="mode-sub">Paste your lyric. Claude continues, rewrites, suggests hooks, or punches it up in your style.</p>
+        <p class="mode-sub">Work from your own lyrics, or have AI write original lyrics from your idea.</p>
       </div>
 
       <div class="warn-banner info-banner" id="cwApiWarn" style="display:none;">
         <span>🔑</span><span>Add your Anthropic API key in the header to use AI Co-Write.</span>
       </div>
 
-      <div class="panel-card" style="background:linear-gradient(180deg,#1a1a1a 0%,#161616 100%);border:1px solid rgba(45,212,191,.22);">
+      <div class="cw-mode-toggle">
+        <button type="button" class="cw-mode-btn active" data-cwmode="personal" onclick="setCWMode('personal')">
+          <span class="cw-mode-icon">✍️</span>
+          <span class="cw-mode-name">Your Lyrics</span>
+          <span class="cw-mode-desc">Paste your own draft — AI continues, rewrites, or punches it up in your voice.</span>
+        </button>
+        <button type="button" class="cw-mode-btn" data-cwmode="ai" onclick="setCWMode('ai')">
+          <span class="cw-mode-icon">✨</span>
+          <span class="cw-mode-name">AI Lyrics</span>
+          <span class="cw-mode-desc">Give it an idea — AI writes original lyrics from scratch for your genre and mood.</span>
+        </button>
+      </div>
+
+      <!-- AI LYRICS: song idea -->
+      <div class="panel-card card-teal" id="cwIdeaCard" style="display:none;">
+        <div class="card-title card-title-teal">Song Idea</div>
+        <div class="field-group">
+          <label class="f-label">What's the song about?</label>
+          <textarea class="f-textarea" id="cwIdea" style="min-height:90px;" placeholder="e.g. leaving home to chase music, a love that ended at the wrong time, the first night the rent was paid off — or leave blank and let AI pick an angle"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="f-label">What to Write</label>
+          <div class="chip-row" id="cwSectionChips"></div>
+        </div>
+      </div>
+
+      <!-- YOUR LYRICS: paste box -->
+      <div class="panel-card" id="cwLyricsCard" style="background:linear-gradient(180deg,#1a1a1a 0%,#161616 100%);border:1px solid rgba(45,212,191,.22);">
         <div class="card-title card-title-teal">Your Lyrics</div>
         <textarea class="f-textarea" id="cwLyrics" style="min-height:160px;font-family:var(--cs-mono);font-size:13px;" placeholder="Paste your lyrics here — even rough drafts work.&#10;&#10;Example:&#10;City lights burnin' like the secrets that I keep&#10;Runnin' out of reasons but I'm still losin' sleep&#10;&#10;Claude will match your cadence, syllables, and vibe." oninput="cwUpdateCount()"></textarea>
         <div class="row-between" style="margin-top:6px;">
@@ -1138,14 +1186,14 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       </div>
 
       <div class="panel-card">
-        <div class="card-title">What Do You Need?</div>
+        <div class="card-title" id="cwStyleTitle">What Do You Need?</div>
         <div class="chip-row" id="cwTaskChips" style="margin-bottom:16px;"></div>
-        <div class="grid-2" style="margin-bottom:14px;">
+        <div class="grid-2" id="cwRhymeLinesGrid" style="margin-bottom:14px;">
           <div class="field-group">
             <label class="f-label">Rhyme Style</label>
             <div class="chip-row" id="cwRhymeChips"></div>
           </div>
-          <div class="field-group">
+          <div class="field-group" id="cwLinesWrap">
             <label class="f-label">Lines to Generate</label>
             <div class="chip-row" id="cwLinesChips"></div>
           </div>
@@ -1763,10 +1811,23 @@ const FS_OPTS = {
   vaDeliveries:['Melodic Singing','Rap / Flow','Sung-Rap','Belting / Powerful','Whisper-Sing','Half-sung / Spoken','Spoken Word','Operatic','Mumble Melodic'],
   vaAccents:['Neutral American','Southern US','British','London / UK Drill','Caribbean / Jamaican','African (Afrobeats)','Latin','Australian','Soulful Gospel','No specific accent'],
   vaFX:['Autotune (heavy)','Autotune (subtle)','Reverb (big hall)','Reverb (plate)','Delay / echo','Lo-fi / tape saturation','Pitch-up layer','Pitch-down layer','Doubled vocal','Vocoder','Distortion / telephone'],
+  // Genre-based vocal presets — ordered roughly by popularity
   vaPresets:{
+    'R&B':{g:'Female',a:'Young Adult',t:['Smooth','Silky','Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)','Doubled vocal']},
+    'Pop':{g:'Female',a:'Young Adult',t:['Bright','Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'Neutral American',fx:['Autotune (subtle)','Reverb (plate)','Doubled vocal']},
+    'Hip-Hop':{g:'Male',a:'Young Adult',t:['Dark / Deep','Resonant'],tx:['Clean'],d:'Rap / Flow',ac:'Neutral American',fx:['Doubled vocal','Delay / echo']},
+    'Trap':{g:'Male',a:'Young Adult',t:['Nasal','Bright'],tx:['Clean'],d:'Mumble Melodic',ac:'Southern US',fx:['Autotune (heavy)','Delay / echo','Doubled vocal']},
+    'Afrobeats':{g:'Male',a:'Young Adult',t:['Smooth','Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'African (Afrobeats)',fx:['Autotune (subtle)','Reverb (plate)','Delay / echo']},
+    'Latin / Reggaeton':{g:'Male',a:'Young Adult',t:['Smooth','Nasal'],tx:['Clean'],d:'Sung-Rap',ac:'Latin',fx:['Autotune (subtle)','Delay / echo','Doubled vocal']},
+    'Country':{g:'Male',a:'Mature',t:['Warm','Raspy'],tx:['Husky'],d:'Melodic Singing',ac:'Southern US',fx:['Reverb (plate)','Doubled vocal']},
     'Gritty Rock':{g:'Male',a:'Mature',t:['Raspy','Gritty'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Neutral American',fx:['Distortion / telephone','Reverb (big hall)']},
+    'EDM / Dance':{g:'Female',a:'Young Adult',t:['Bright','Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (big hall)','Delay / echo','Pitch-up layer']},
+    'Soul / Gospel':{g:'Female',a:'Mature',t:['Resonant','Warm','Smoky'],tx:['Husky'],d:'Belting / Powerful',ac:'Soulful Gospel',fx:['Reverb (big hall)']},
     'Indie Soft':{g:'Androgynous',a:'Young Adult',t:['Airy','Breathy'],tx:['Velvety'],d:'Whisper-Sing',ac:'British',fx:['Reverb (plate)','Lo-fi / tape saturation']},
-    'UK Drill':{g:'Male',a:'Young Adult',t:['Dark / Deep','Nasal'],tx:['Clean'],d:'Rap / Flow',ac:'London / UK Drill',fx:['Doubled vocal']}
+    'Lo-Fi / Chill':{g:'Androgynous',a:'Young Adult',t:['Breathy','Smoky'],tx:['Velvety'],d:'Half-sung / Spoken',ac:'No specific accent',fx:['Lo-fi / tape saturation','Reverb (plate)']},
+    'UK Drill':{g:'Male',a:'Young Adult',t:['Dark / Deep','Nasal'],tx:['Clean'],d:'Rap / Flow',ac:'London / UK Drill',fx:['Doubled vocal']},
+    'Dancehall':{g:'Male',a:'Young Adult',t:['Raspy','Gritty'],tx:['Clean'],d:'Rap / Flow',ac:'Caribbean / Jamaican',fx:['Delay / echo','Doubled vocal']},
+    'Jazz':{g:'Female',a:'Mature',t:['Smoky','Warm'],tx:['Velvety'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (plate)']}
   }
 };
 
@@ -2271,7 +2332,14 @@ document.getElementById('lyricsConcept').addEventListener('input', assembleLyric
 // ═══════════════════════════════════════════════════════════
 // CO-WRITE
 // ═══════════════════════════════════════════════════════════
-const CW = { task:'Continue my lines', rhyme:'Natural mix', lines:4, genre:'Hip-Hop / R&B', mood:'Introspective' };
+const CW = { mode:'personal', task:'Continue my lines', rhyme:'Natural mix', lines:4, genre:'Hip-Hop / R&B', mood:'Introspective', aiSection:'Full Song', lastAI:null };
+const CW_AI_SECTIONS = {
+  'Full Song':'Write a complete song: [Verse 1], [Pre-Chorus], [Chorus], [Verse 2], [Pre-Chorus], [Chorus], [Bridge], [Chorus]. Keep the whole thing under 2800 characters.',
+  'Verse':'Write one verse, 8–16 lines depending on what the genre expects.',
+  'Hook / Chorus':'Write one 4–8 line hook/chorus that captures the emotional core and is built to repeat.',
+  'Verse + Hook':'Write one verse followed by a hook/chorus.',
+  'Bridge':'Write one 4–8 line bridge that shifts perspective or raises the emotional stakes.'
+};
 const CW_OPTS = {
   tasks:['Continue my lines','Suggest rhymes for last line','Fill in the blanks','Rewrite/improve my lines','Compare and suggest better','Add a hook/chorus','Add a bridge'],
   rhymes:['Natural mix','Perfect rhymes only','Slant / near rhymes','Multisyllabic rhymes','Internal rhymes','Free verse'],
@@ -2301,8 +2369,36 @@ function renderCWAll() {
   renderChips('cwTaskChips', CW_OPTS.tasks, o=>CW.task===o, o=>CW.task=o);
   renderChips('cwRhymeChips', CW_OPTS.rhymes, o=>CW.rhyme===o, o=>CW.rhyme=o, true);
   renderChips('cwLinesChips', CW_OPTS.linesOpts, o=>CW.lines===o, o=>CW.lines=o, true);
+  renderChips('cwSectionChips', Object.keys(CW_AI_SECTIONS), o=>CW.aiSection===o, o=>CW.aiSection=o, true);
   renderFSSelect('cwGenre', CW_OPTS.genres, CW.genre, v=>CW.genre=v);
   renderFSSelect('cwMood', CW_OPTS.moods, CW.mood, v=>CW.mood=v);
+}
+
+// Your Lyrics = co-write from the user's draft · AI Lyrics = write original lyrics from an idea
+function setCWMode(mode) {
+  CW.mode = mode;
+  const ai = mode === 'ai';
+  document.querySelectorAll('.cw-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.cwmode === mode));
+  document.getElementById('cwIdeaCard').style.display   = ai ? 'block' : 'none';
+  document.getElementById('cwLyricsCard').style.display = ai ? 'none'  : 'block';
+  document.getElementById('cwTaskChips').style.display  = ai ? 'none'  : '';
+  document.getElementById('cwLinesWrap').style.display  = ai ? 'none'  : '';
+  document.getElementById('cwRhymeLinesGrid').style.gridTemplateColumns = ai ? '1fr' : '';
+  document.getElementById('cwStyleTitle').textContent   = ai ? 'Style' : 'What Do You Need?';
+  document.getElementById('cwBtnText').innerHTML        = cwBtnLabel();
+  document.getElementById('cwError').style.display = 'none';
+}
+function cwBtnLabel() { return CW.mode === 'ai' ? '✨ Write My Lyrics' : '✍️ Co-Write Now'; }
+function cwEngBlock() {
+  return engPromptBlock().replace('weave these production qualities into the prompt naturally — do not list them as a separate section','let this sonic target inform word choice, energy, and phrasing density');
+}
+// Hand AI-written lyrics to Your Lyrics mode so the user can keep co-writing on them
+function cwSendToPersonal() {
+  if (!CW.lastAI) return;
+  document.getElementById('cwLyrics').value = CW.lastAI.lyrics;
+  cwUpdateCount();
+  setCWMode('personal');
+  document.getElementById('cwLyricsCard').scrollIntoView({behavior:'smooth', block:'center'});
 }
 function cwUpdateCount() {
   const t = document.getElementById('cwLyrics').value;
@@ -2312,7 +2408,9 @@ function cwUpdateCount() {
 }
 function cwClearLyrics() { document.getElementById('cwLyrics').value=''; cwUpdateCount(); }
 
-async function handleCowrite() {
+function handleCowrite() { return CW.mode === 'ai' ? handleAILyrics() : handleCowritePersonal(); }
+
+async function handleCowritePersonal() {
   const lyrics = document.getElementById('cwLyrics').value.trim();
   const errEl = document.getElementById('cwError');
   errEl.style.display='none';
@@ -2337,7 +2435,7 @@ STYLE CONTEXT:
 - Rhyme: ${CW.rhyme} — ${CW_RHYME_GUIDE[CW.rhyme]}
 - Lines to generate: ${CW.lines}
 
-RULES: Write ORIGINAL lines only. Study the writer's voice BEFORE writing. Match their DNA. Every line must be singable. Count syllables.${GENRE_ONLY_RULE}${engPromptBlock().replace('weave these production qualities into the prompt naturally — do not list them as a separate section','let this sonic target inform word choice, energy, and phrasing density')}
+RULES: Write ORIGINAL lines only. Study the writer's voice BEFORE writing. Match their DNA. Every line must be singable. Count syllables.${GENRE_ONLY_RULE}${cwEngBlock()}
 
 Respond with ONLY valid JSON, no markdown:
 {"analysis":"2-3 sentences on the writer's style and strengths","writer_original":"their lyrics with \\n line breaks","suggestions":[{"label":"short label","lines":"string with \\n line breaks","why_it_works":"one sentence on the technique"}],"pro_tip":"one co-writer insight specific to this piece"}
@@ -2349,9 +2447,73 @@ Generate 3 distinct suggestion options.`;
   } catch(e) {
     errEl.textContent=e.message; errEl.style.display='block';
   } finally {
-    btn.disabled=false; document.getElementById('cwBtnText').innerHTML='✍️ Co-Write Now';
+    btn.disabled=false; document.getElementById('cwBtnText').innerHTML=cwBtnLabel();
     document.getElementById('cwLoading').style.display='none';
   }
+}
+
+async function handleAILyrics() {
+  const idea = document.getElementById('cwIdea').value.trim();
+  const errEl = document.getElementById('cwError');
+  errEl.style.display='none';
+  const btn = document.getElementById('cwBtn');
+  btn.disabled=true; document.getElementById('cwBtnText').innerHTML='<span class="spinner"></span> Writing Your Lyrics...';
+  document.getElementById('cwLoading').style.display='block';
+  document.getElementById('cwOutput').innerHTML='';
+  const prompt = `You are an expert songwriter for Creative Spasciz. Write ORIGINAL lyrics from scratch.
+
+SONG IDEA: ${idea || '(open — choose an angle that is specific and emotionally concrete, not generic)'}
+
+WHAT TO WRITE: ${CW.aiSection}
+${CW_AI_SECTIONS[CW.aiSection]}
+
+STYLE:
+- Genre: ${CW.genre}
+- Mood: ${CW.mood}
+- Rhyme: ${CW.rhyme} — ${CW_RHYME_GUIDE[CW.rhyme]}
+
+RULES: Start every section with a bracket tag ([Verse 1], [Chorus], [Bridge], etc.). Write singable lines — natural phrasing, consistent syllable counts within a section, concrete imagery over clichés. Use the vocabulary and cadence the genre expects.${GENRE_ONLY_RULE}${cwEngBlock()}
+
+Respond with ONLY valid JSON, no markdown:
+{"title":"string","title_alternates":["string","string"],"lyrics":"string with \\n line breaks and [Section] tags","approach":"1-2 sentences on the angle and rhyme strategy you chose"}`;
+  try {
+    const out = await callClaudeJSON(prompt, 2200);
+    if (!out || !out.lyrics) throw new Error('No lyrics came back — try again.');
+    CW.lastAI = out;
+    renderAILyricsOutput(out);
+    saveToHistory('Co-Write', `TITLE: ${out.title||'Untitled'}\n\n${out.lyrics}`, `AI Lyrics · ${CW.aiSection} · ${CW.genre}`);
+  } catch(e) {
+    errEl.textContent=e.message; errEl.style.display='block';
+  } finally {
+    btn.disabled=false; document.getElementById('cwBtnText').innerHTML=cwBtnLabel();
+    document.getElementById('cwLoading').style.display='none';
+  }
+}
+
+function renderAILyricsOutput(out) {
+  const el = document.getElementById('cwOutput');
+  let h = '<div class="fade-up">';
+  h += `<div class="panel-card" style="margin-top:8px;">
+    <div class="f-label f-label-teal" style="margin-bottom:8px;">Title</div>
+    <div style="font-size:24px;font-weight:800;margin-bottom:8px;">"${esc(out.title||'Untitled')}"</div>
+    ${(out.title_alternates||[]).map(t=>`<span class="small-tag">"${esc(t)}"</span>`).join('')}
+  </div>`;
+  // Text is read from CW.lastAI rather than inlined into onclick, so quotes in lyrics can't break the buttons
+  h += `<div class="panel-card card-coral">
+    <div class="row-between" style="margin-bottom:10px;">
+      <div><div class="f-label" style="margin-bottom:3px;">✨ AI Lyrics — ${esc(CW.aiSection)}</div>
+      <div style="font-size:11px;color:var(--cs-text-muted);">${out.lyrics.length} chars · ${esc(CW.genre)} · ${esc(CW.mood)}</div></div>
+      <button class="btn-primary" style="width:auto;padding:9px 16px;font-size:12px;" onclick="copyText(CW.lastAI.lyrics,this)">📋 Copy Lyrics</button>
+    </div>
+    <pre class="output-pre" style="background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:8px;">${esc(out.lyrics)}</pre>
+  </div>`;
+  if (out.approach) h += `<div class="panel-card card-teal"><div class="f-label f-label-teal" style="margin-bottom:8px;">🎯 The Approach</div><div style="font-size:14px;line-height:1.65;">${esc(out.approach)}</div></div>`;
+  h += `<div class="flex-gap" style="margin-bottom:20px;">
+    <button class="btn-ghost" onclick="handleAILyrics()">↺ Write Another Version</button>
+    <button class="btn-ghost btn-ghost-teal" onclick="cwSendToPersonal()">✍️ Refine These in Your Lyrics</button>
+  </div></div>`;
+  el.innerHTML = h;
+  el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function renderCWOutput(out) {
@@ -2364,7 +2526,7 @@ function renderCWOutput(out) {
     h += `<div class="panel-card card-coral"><div class="row-between" style="margin-bottom:10px;"><span class="f-label" style="margin-bottom:0;">✨ ${esc(label)}</span><button class="copy-btn-inline" onclick="copyText(\`${escJ(s.lines)}\`,this)">Copy</button></div><pre class="output-pre" style="background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:8px;margin-bottom:9px;">${esc(s.lines)}</pre>${s.why_it_works?`<div style="font-size:12px;color:var(--cs-text-muted);font-style:italic;padding:7px 11px;background:rgba(232,112,90,.05);border-radius:6px;">💡 ${esc(s.why_it_works)}</div>`:''}</div>`;
   });
   if (out.pro_tip) h += `<div class="panel-card card-teal"><div class="f-label f-label-teal" style="margin-bottom:8px;">🎯 Pro Tip</div><div style="font-size:14px;line-height:1.65;">${esc(out.pro_tip)}</div></div>`;
-  h += `<div class="flex-gap" style="margin-bottom:20px;"><button class="btn-ghost" onclick="handleCowrite()">↺ More Options</button></div></div>`;
+  h += `<div class="flex-gap" style="margin-bottom:20px;"><button class="btn-ghost" onclick="handleCowritePersonal()">↺ More Options</button></div></div>`;
   el.innerHTML=h; el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -2472,7 +2634,9 @@ function restartRelease() {
 // UTILS
 // ═══════════════════════════════════════════════════════════
 function esc(s) { if(typeof s!=='string')s=String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function escJ(s) { if(typeof s!=='string')s=String(s||''); return s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$'); }
+// For text inlined into onclick="copyText(`…`)": JS-escape for the template literal, then HTML-escape
+// & and " so a quote in lyrics can't terminate the attribute (the parser decodes them back before JS runs)
+function escJ(s) { if(typeof s!=='string')s=String(s||''); return s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$').replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
 function copyElem(id, btn) {
   const el = document.getElementById(id);
   if (!el) return;
