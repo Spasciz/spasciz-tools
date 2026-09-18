@@ -390,6 +390,11 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .wiz-skip a{color:var(--cs-text-muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .wiz-skip a:hover{color:var(--cs-teal)}
 
+/* VOCAL ARCHITECT PRESET GROUPS */
+.va-group-label{font-family:var(--cs-mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cs-text-faint);margin:12px 0 6px}
+.va-group-label:first-child{margin-top:2px}
+.va-group-row{margin-bottom:2px}
+
 /* CO-WRITE MODE SWITCH */
 .cw-mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
 .cw-mode-btn{display:flex;flex-direction:column;align-items:flex-start;gap:7px;text-align:left;background:var(--cs-bg-card);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius-card);padding:18px 20px;cursor:pointer;transition:all .25s;font-family:var(--cs-font);color:var(--cs-text-muted)}
@@ -683,7 +688,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
         <div id="vaBody">
           <div style="padding:12px 14px;background:rgba(45,212,191,.05);border:1px dashed rgba(45,212,191,.25);border-radius:9px;margin-bottom:16px;">
             <div class="f-label f-label-teal" style="margin-bottom:8px;">⚡ Quick Presets</div>
-            <div class="chip-row" id="vaPresetChips"></div>
+            <div id="vaPresetChips"></div>
           </div>
           <div class="grid-2" style="margin-bottom:14px;">
             <div>
@@ -825,6 +830,8 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <button class="style-btn" onclick="selectInstStyle(this,'Improvisational')"><div class="style-name">Improvisational</div><div class="style-desc">Jazz-feel, expressive runs</div></button>
           <button class="style-btn" onclick="selectInstStyle(this,'Cinematic & Building')"><div class="style-name">Cinematic & Building</div><div class="style-desc">Swells, tension, crescendos</div></button>
         </div>
+        <div class="inst-section-label">Genre <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional)</span></div>
+        <select class="f-select" id="instGenre" style="margin-bottom:6px;"></select>
         <div class="inst-section-label">Mood (pick up to 3)</div>
         <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;" id="instMoodWrap">
           <button class="mood-tag" onclick="toggleInstMood(this,'Dark')">Dark</button>
@@ -920,7 +927,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <div class="session-bar">
         <div>
           <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cs-text-faint);margin-bottom:4px;">Session</div>
-          <div class="session-meta">BPM: <span id="stemBpmDisplay">90</span> &nbsp;·&nbsp; Key: <span id="stemKeyDisplay">C Major</span> &nbsp;·&nbsp; Platform: <span id="stemPlatformDisplay">Suno</span></div>
+          <div class="session-meta">BPM: <span id="stemBpmDisplay">90</span> &nbsp;·&nbsp; Key: <span id="stemKeyDisplay">C Major</span> &nbsp;·&nbsp; Platform: <span id="stemPlatformDisplay">Suno</span> &nbsp;·&nbsp; Genre: <span id="stemGenreDisplay">Any</span></div>
         </div>
         <div style="display:flex;gap:7px;">
           <button class="btn-sm btn-sm-outline" onclick="toggleStemSessionModal()">⚙️ Session</button>
@@ -946,6 +953,10 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <select class="f-select" id="stemPlatformSelect" onchange="stemState.platform=this.value;document.getElementById('stemPlatformDisplay').textContent=this.value">
             <option selected>Suno</option><option>Udio</option><option>ACE Studio</option><option>Stable Audio</option><option>ElevenLabs</option><option>Mureka</option><option>Moises AI</option><option>Riffusion</option><option>Universal</option>
           </select>
+        </div>
+        <div class="field-group" style="margin-top:10px;">
+          <label class="f-label">Genre <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional — applies to every stem)</span></label>
+          <select class="f-select" id="stemGenre"></select>
         </div>
         <div class="field-group" style="margin-top:10px;">
           <label class="f-label">Overall Vibe</label>
@@ -1251,6 +1262,12 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <button class="choice-btn" onclick="relSelectGenre(this,'Pop')"><span class="cicon">✨</span>Pop</button>
           <button class="choice-btn" onclick="relSelectGenre(this,'R&B')"><span class="cicon">🎷</span>R&B</button>
           <button class="choice-btn" onclick="relSelectGenre(this,'Drill')"><span class="cicon">🏙️</span>Drill</button>
+          <button class="choice-btn" onclick="relSelectGenre(this,'Rock')"><span class="cicon">🎸</span>Rock</button>
+          <button class="choice-btn" onclick="relSelectGenre(this,'Jazz')"><span class="cicon">🎺</span>Jazz</button>
+        </div>
+        <div class="field-group" style="margin-top:14px;">
+          <label class="f-label">Or choose from every genre</label>
+          <select class="f-select" id="relGenreSelect"></select>
         </div>
         <button class="btn-primary" id="rel-btn-1" onclick="relGoStep(2)" style="margin-top:8px;" disabled>Next: Set The Mood →</button>
       </div>
@@ -1390,7 +1407,13 @@ const ENG_PRESETS = {
   'Cinematic':     { character:'Open & Dynamic', color:['Console Glue'], lowEnd:'Deep Sub-Heavy', tone:'Balanced / Neutral', space:'Large Hall', dynamics:'Open Dynamic Range', width:'Ultra-Wide / Immersive' },
   'Radio Pop':     { character:'Punchy & Compressed', color:['Console Glue','Tube Warmth'], lowEnd:'Tight & Controlled', tone:'Airy & Hyped', space:'Plate Reverb', dynamics:'Radio-Ready', width:'Wide Stereo' },
   'Vintage Soul':  { character:'Warm & Glued', color:['Tape Saturation','Tube Warmth'], lowEnd:'Boomy & Warm', tone:'Midrange-Forward', space:'Plate Reverb', dynamics:'Moderately Controlled', width:'Natural Stereo' },
-  'Raw & Live':    { character:'Raw & Unpolished', color:['Clean / Digital'], lowEnd:'Rolled Off / Light', tone:'Midrange-Forward', space:'Small Room', dynamics:'Open Dynamic Range', width:'Mono-Focused' }
+  'Raw & Live':    { character:'Raw & Unpolished', color:['Clean / Digital'], lowEnd:'Rolled Off / Light', tone:'Midrange-Forward', space:'Small Room', dynamics:'Open Dynamic Range', width:'Mono-Focused' },
+  'Classic Rock':  { character:'Warm & Glued', color:['Tape Saturation','Tube Warmth'], lowEnd:'Tight & Controlled', tone:'Midrange-Forward', space:'Plate Reverb', dynamics:'Moderately Controlled', width:'Wide Stereo' },
+  'Heavy / Metal': { character:'Aggressive & Loud', color:['Drive / Distortion'], lowEnd:'Tight & Controlled', tone:'Bright & Crisp', space:'Small Room', dynamics:'Heavily Compressed', width:'Wide Stereo' },
+  'Punk / Garage': { character:'Raw & Unpolished', color:['Drive / Distortion','Tape Saturation'], lowEnd:'Rolled Off / Light', tone:'Midrange-Forward', space:'Dry & Close', dynamics:'Moderately Controlled', width:'Natural Stereo' },
+  'Jazz Club':     { character:'Open & Dynamic', color:['Tube Warmth'], lowEnd:'Boomy & Warm', tone:'Dark & Warm', space:'Small Room', dynamics:'Open Dynamic Range', width:'Natural Stereo' },
+  'Smooth Jazz':   { character:'Soft & Intimate', color:['Clean / Digital','Console Glue'], lowEnd:'Tight & Controlled', tone:'Airy & Hyped', space:'Plate Reverb', dynamics:'Radio-Ready', width:'Wide Stereo' },
+  'Big Band':      { character:'Open & Dynamic', color:['Tube Warmth','Console Glue'], lowEnd:'Tight & Controlled', tone:'Balanced / Neutral', space:'Large Hall', dynamics:'Open Dynamic Range', width:'Wide Stereo' }
 };
 const ENG_HOSTS = ['fullsong','instrumental','stems','lyrics','cowrite','release'];
 
@@ -1781,8 +1804,36 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
 // ═══════════════════════════════════════════════════════════
 // FULL SONG — DATA & CHIP BUILDERS
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// GENRES — one taxonomy shared by every genre picker in the app
+// ═══════════════════════════════════════════════════════════
+const GENRE_GROUPS = [
+  ['Hip-Hop & Rap', ['Hip-Hop','Boom Bap','Trap','Drill','UK Drill','Melodic Rap','Conscious Hip-Hop','Lo-Fi Hip-Hop','Phonk','Grime','Cloud Rap','Emo Rap','West Coast / G-Funk','Southern Hip-Hop','Jersey Club']],
+  ['R&B & Soul', ['R&B','Contemporary R&B','Alternative R&B','Neo-Soul','Classic Soul','Motown','Funk','Gospel','Quiet Storm','New Jack Swing']],
+  ['Pop', ['Pop','Dance-Pop','Synth-Pop','Electropop','Indie Pop','Dream Pop','Bedroom Pop','Art Pop','Hyperpop','K-Pop','J-Pop','Teen Pop']],
+  ['Rock', ['Rock','Classic Rock','Hard Rock','Soft Rock','Arena Rock','Alternative Rock','Indie Rock','Garage Rock','Grunge','Post-Grunge','Punk Rock','Pop Punk','Hardcore Punk','Post-Punk','Emo','Ska Punk','New Wave','Gothic Rock','Psychedelic Rock','Progressive Rock','Art Rock','Krautrock','Space Rock','Stoner Rock','Blues Rock','Southern Rock','Folk Rock','Country Rock','Glam Rock','Rockabilly','Surf Rock','Britpop','Shoegaze','Post-Rock','Math Rock','Noise Rock','Industrial Rock','Dance-Punk','Yacht Rock','Jam Band']],
+  ['Metal', ['Heavy Metal','Thrash Metal','Speed Metal','Death Metal','Black Metal','Doom Metal','Sludge Metal','Power Metal','Symphonic Metal','Progressive Metal','Nu Metal','Metalcore','Deathcore','Djent','Industrial Metal','Glam Metal','Folk Metal','Post-Metal']],
+  ['Jazz', ['Jazz','New Orleans Jazz','Dixieland','Ragtime','Stride Piano','Swing','Big Band','Gypsy Jazz','Bebop','Hard Bop','Cool Jazz','Modal Jazz','Post-Bop','Free Jazz','Avant-Garde Jazz','Spiritual Jazz','Third Stream','Soul Jazz','Jazz-Funk','Jazz Fusion','Smooth Jazz','Latin Jazz','Afro-Cuban Jazz','Bossa Nova','Vocal Jazz','Chamber Jazz','Nordic Jazz','Acid Jazz','Nu Jazz','Jazz Rap','Electro Swing','Lo-Fi Jazz','Lounge']],
+  ['Blues', ['Blues','Delta Blues','Chicago Blues','Electric Blues','Texas Blues','Soul Blues']],
+  ['Electronic & Dance', ['EDM','House','Deep House','Tech House','Progressive House','Techno','Minimal Techno','Trance','Drum & Bass','Liquid DnB','Jungle','Dubstep','Future Bass','UK Garage','Breakbeat','Electro','Synthwave','Hardstyle','Big Room','Disco','Nu-Disco','IDM','Ambient','Downtempo','Chillwave','Trip-Hop']],
+  ['Latin', ['Reggaeton','Latin Pop','Latin Trap','Dembow','Bachata','Salsa','Merengue','Cumbia','Regional Mexican','Corridos Tumbados','Samba','Tango','Flamenco']],
+  ['African & Caribbean', ['Afrobeats','Afrobeat','Afro-Fusion','Amapiano','Afro House','Gqom','Highlife','Dancehall','Reggae','Roots Reggae','Dub','Soca','Calypso','Kompa','Zouk']],
+  ['Country & Folk', ['Country','Modern Country','Classic Country','Outlaw Country','Country Pop','Bluegrass','Americana','Folk','Indie Folk','Singer-Songwriter','Celtic']],
+  ['Chill, Cinematic & More', ['Lo-Fi / Chill','Cinematic / Score','Epic / Trailer','Orchestral','Classical','Neoclassical','New Age','Video Game','Musical Theatre']]
+];
+const ALL_GENRES = GENRE_GROUPS.flatMap(g => g[1]);
+// Grouped <select>. Pass anyLabel to add a blank "no preference" option for pickers where genre is optional.
+function renderGenreSelect(id, cur, onChange, anyLabel) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const opt = g => `<option value="${esc(g)}"${g === cur ? ' selected' : ''}>${esc(g)}</option>`;
+  el.innerHTML = (anyLabel ? `<option value=""${!cur ? ' selected' : ''}>${esc(anyLabel)}</option>` : '')
+    + GENRE_GROUPS.map(([group, list]) => `<optgroup label="${esc(group)}">${list.map(opt).join('')}</optgroup>`).join('');
+  el.onchange = e => onChange(e.target.value);
+}
+
 const FS = {
-  platform: 'Suno', theme:'', mood:'Introspective', genre:'Hip-Hop / R&B',
+  platform: 'Suno', theme:'', mood:'Introspective', genre:'Hip-Hop',
   tempo:'Mid-tempo', explicit:'Clean', structure:['Intro','Verse','Hook','Verse','Hook','Bridge','Hook','Outro'],
   adlib:'Medium', vocalDir:[], useVA:true,
   bpm:90, key:'No preference',
@@ -1791,7 +1842,6 @@ const FS = {
 };
 const FS_OPTS = {
   moods:['Introspective','Euphoric','Melancholic','Aggressive','Romantic','Dark / Brooding','Hopeful','Nostalgic','Confident / Flex'],
-  genres:['Hip-Hop / R&B','Pop','Trap','Afrobeats','Indie / Alt','Country','EDM / Dance','Rock','Drill','Lo-fi / Chill'],
   platforms:['Suno','Udio','ElevenLabs Music','Universal (all AI tools)'],
   tempos:['Slow / Ballad','Mid-tempo','Upbeat','High-energy'],
   keys:['C Major','C Minor','D Major','D Minor','E Major','E Minor','F Major','F Minor','G Major','G Minor','A Major','A Minor','B Major','B Minor','No preference'],
@@ -1811,25 +1861,54 @@ const FS_OPTS = {
   vaDeliveries:['Melodic Singing','Rap / Flow','Sung-Rap','Belting / Powerful','Whisper-Sing','Half-sung / Spoken','Spoken Word','Operatic','Mumble Melodic'],
   vaAccents:['Neutral American','Southern US','British','London / UK Drill','Caribbean / Jamaican','African (Afrobeats)','Latin','Australian','Soulful Gospel','No specific accent'],
   vaFX:['Autotune (heavy)','Autotune (subtle)','Reverb (big hall)','Reverb (plate)','Delay / echo','Lo-fi / tape saturation','Pitch-up layer','Pitch-down layer','Doubled vocal','Vocoder','Distortion / telephone'],
-  // Genre-based vocal presets — ordered roughly by popularity
+  // Genre-based vocal presets — grouped for display by VA_PRESET_GROUPS
   vaPresets:{
-    'R&B':{g:'Female',a:'Young Adult',t:['Smooth','Silky','Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)','Doubled vocal']},
-    'Pop':{g:'Female',a:'Young Adult',t:['Bright','Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'Neutral American',fx:['Autotune (subtle)','Reverb (plate)','Doubled vocal']},
-    'Hip-Hop':{g:'Male',a:'Young Adult',t:['Dark / Deep','Resonant'],tx:['Clean'],d:'Rap / Flow',ac:'Neutral American',fx:['Doubled vocal','Delay / echo']},
-    'Trap':{g:'Male',a:'Young Adult',t:['Nasal','Bright'],tx:['Clean'],d:'Mumble Melodic',ac:'Southern US',fx:['Autotune (heavy)','Delay / echo','Doubled vocal']},
-    'Afrobeats':{g:'Male',a:'Young Adult',t:['Smooth','Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'African (Afrobeats)',fx:['Autotune (subtle)','Reverb (plate)','Delay / echo']},
-    'Latin / Reggaeton':{g:'Male',a:'Young Adult',t:['Smooth','Nasal'],tx:['Clean'],d:'Sung-Rap',ac:'Latin',fx:['Autotune (subtle)','Delay / echo','Doubled vocal']},
-    'Country':{g:'Male',a:'Mature',t:['Warm','Raspy'],tx:['Husky'],d:'Melodic Singing',ac:'Southern US',fx:['Reverb (plate)','Doubled vocal']},
-    'Gritty Rock':{g:'Male',a:'Mature',t:['Raspy','Gritty'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Neutral American',fx:['Distortion / telephone','Reverb (big hall)']},
-    'EDM / Dance':{g:'Female',a:'Young Adult',t:['Bright','Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (big hall)','Delay / echo','Pitch-up layer']},
-    'Soul / Gospel':{g:'Female',a:'Mature',t:['Resonant','Warm','Smoky'],tx:['Husky'],d:'Belting / Powerful',ac:'Soulful Gospel',fx:['Reverb (big hall)']},
-    'Indie Soft':{g:'Androgynous',a:'Young Adult',t:['Airy','Breathy'],tx:['Velvety'],d:'Whisper-Sing',ac:'British',fx:['Reverb (plate)','Lo-fi / tape saturation']},
-    'Lo-Fi / Chill':{g:'Androgynous',a:'Young Adult',t:['Breathy','Smoky'],tx:['Velvety'],d:'Half-sung / Spoken',ac:'No specific accent',fx:['Lo-fi / tape saturation','Reverb (plate)']},
-    'UK Drill':{g:'Male',a:'Young Adult',t:['Dark / Deep','Nasal'],tx:['Clean'],d:'Rap / Flow',ac:'London / UK Drill',fx:['Doubled vocal']},
-    'Dancehall':{g:'Male',a:'Young Adult',t:['Raspy','Gritty'],tx:['Clean'],d:'Rap / Flow',ac:'Caribbean / Jamaican',fx:['Delay / echo','Doubled vocal']},
-    'Jazz':{g:'Female',a:'Mature',t:['Smoky','Warm'],tx:['Velvety'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (plate)']}
+    'R&B':{g:'Female',a:'Young Adult',t:['Smooth', 'Silky', 'Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)', 'Doubled vocal']},
+    'Pop':{g:'Female',a:'Young Adult',t:['Bright', 'Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'Neutral American',fx:['Autotune (subtle)', 'Reverb (plate)', 'Doubled vocal']},
+    'Soul / Gospel':{g:'Female',a:'Mature',t:['Resonant', 'Warm', 'Smoky'],tx:['Husky'],d:'Belting / Powerful',ac:'Soulful Gospel',fx:['Reverb (big hall)']},
+    'EDM / Dance':{g:'Female',a:'Young Adult',t:['Bright', 'Airy'],tx:['Crystalline'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (big hall)', 'Delay / echo', 'Pitch-up layer']},
+    'Hip-Hop':{g:'Male',a:'Young Adult',t:['Dark / Deep', 'Resonant'],tx:['Clean'],d:'Rap / Flow',ac:'Neutral American',fx:['Doubled vocal', 'Delay / echo']},
+    'Trap':{g:'Male',a:'Young Adult',t:['Nasal', 'Bright'],tx:['Clean'],d:'Mumble Melodic',ac:'Southern US',fx:['Autotune (heavy)', 'Delay / echo', 'Doubled vocal']},
+    'UK Drill':{g:'Male',a:'Young Adult',t:['Dark / Deep', 'Nasal'],tx:['Clean'],d:'Rap / Flow',ac:'London / UK Drill',fx:['Doubled vocal']},
+    'Afrobeats':{g:'Male',a:'Young Adult',t:['Smooth', 'Warm'],tx:['Honeyed'],d:'Melodic Singing',ac:'African (Afrobeats)',fx:['Autotune (subtle)', 'Reverb (plate)', 'Delay / echo']},
+    'Latin / Reggaeton':{g:'Male',a:'Young Adult',t:['Smooth', 'Nasal'],tx:['Clean'],d:'Sung-Rap',ac:'Latin',fx:['Autotune (subtle)', 'Delay / echo', 'Doubled vocal']},
+    'Dancehall':{g:'Male',a:'Young Adult',t:['Raspy', 'Gritty'],tx:['Clean'],d:'Rap / Flow',ac:'Caribbean / Jamaican',fx:['Delay / echo', 'Doubled vocal']},
+    'Classic Rock':{g:'Male',a:'Mature',t:['Raspy', 'Warm'],tx:['Husky'],d:'Belting / Powerful',ac:'Neutral American',fx:['Reverb (plate)', 'Doubled vocal']},
+    'Gritty Rock':{g:'Male',a:'Mature',t:['Raspy', 'Gritty'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Neutral American',fx:['Distortion / telephone', 'Reverb (big hall)']},
+    'Alt Rock':{g:'Male',a:'Young Adult',t:['Warm', 'Breathy'],tx:['Husky'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)', 'Doubled vocal']},
+    'Indie Soft':{g:'Androgynous',a:'Young Adult',t:['Airy', 'Breathy'],tx:['Velvety'],d:'Whisper-Sing',ac:'British',fx:['Reverb (plate)', 'Lo-fi / tape saturation']},
+    'Punk':{g:'Male',a:'Young Adult',t:['Nasal', 'Gritty'],tx:['Cracked'],d:'Belting / Powerful',ac:'British',fx:['Doubled vocal', 'Distortion / telephone']},
+    'Pop Punk':{g:'Male',a:'Young (teen)',t:['Nasal', 'Bright'],tx:['Clean'],d:'Melodic Singing',ac:'Neutral American',fx:['Doubled vocal']},
+    'Grunge':{g:'Male',a:'Young Adult',t:['Raspy', 'Dark / Deep'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Neutral American',fx:['Doubled vocal', 'Reverb (plate)']},
+    'Emo':{g:'Male',a:'Young Adult',t:['Nasal', 'Breathy'],tx:['Cracked'],d:'Melodic Singing',ac:'Neutral American',fx:['Doubled vocal', 'Reverb (plate)']},
+    'Heavy Metal':{g:'Male',a:'Mature',t:['Gritty', 'Resonant'],tx:['Gravelly'],d:'Belting / Powerful',ac:'No specific accent',fx:['Distortion / telephone', 'Reverb (big hall)', 'Doubled vocal']},
+    'Blues Rock':{g:'Male',a:'Mature',t:['Raspy', 'Smoky'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Southern US',fx:['Reverb (plate)']},
+    'Southern Rock':{g:'Male',a:'Mature',t:['Raspy', 'Warm'],tx:['Husky'],d:'Melodic Singing',ac:'Southern US',fx:['Reverb (plate)', 'Doubled vocal']},
+    'Psychedelic Rock':{g:'Male',a:'Young Adult',t:['Warm', 'Airy'],tx:['Velvety'],d:'Melodic Singing',ac:'British',fx:['Delay / echo', 'Reverb (big hall)', 'Lo-fi / tape saturation']},
+    'Shoegaze':{g:'Androgynous',a:'Young Adult',t:['Airy', 'Breathy'],tx:['Velvety'],d:'Whisper-Sing',ac:'No specific accent',fx:['Reverb (big hall)', 'Delay / echo']},
+    'Jazz':{g:'Female',a:'Mature',t:['Smoky', 'Warm'],tx:['Velvety'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (plate)']},
+    'Vocal Jazz / Crooner':{g:'Male',a:'Mature',t:['Smooth', 'Resonant', 'Warm'],tx:['Velvety'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)']},
+    'Smooth Jazz':{g:'Female',a:'Young Adult',t:['Smooth', 'Silky'],tx:['Honeyed'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (plate)', 'Delay / echo']},
+    'Swing / Big Band':{g:'Male',a:'Mature',t:['Bright', 'Resonant'],tx:['Clean'],d:'Belting / Powerful',ac:'Neutral American',fx:['Reverb (big hall)']},
+    'Bossa Nova':{g:'Female',a:'Young Adult',t:['Breathy', 'Airy', 'Warm'],tx:['Velvety'],d:'Whisper-Sing',ac:'Latin',fx:['Reverb (plate)']},
+    'Lounge':{g:'Female',a:'Mature',t:['Smoky', 'Breathy'],tx:['Velvety'],d:'Half-sung / Spoken',ac:'No specific accent',fx:['Reverb (plate)']},
+    'Acid Jazz':{g:'Female',a:'Young Adult',t:['Smooth', 'Warm'],tx:['Honeyed'],d:'Sung-Rap',ac:'British',fx:['Reverb (plate)', 'Delay / echo']},
+    'Jazz Rap':{g:'Male',a:'Young Adult',t:['Warm', 'Smooth'],tx:['Clean'],d:'Rap / Flow',ac:'Neutral American',fx:['Lo-fi / tape saturation', 'Reverb (plate)']},
+    'Blues':{g:'Male',a:'Aged / Weathered',t:['Raspy', 'Smoky'],tx:['Gravelly'],d:'Melodic Singing',ac:'Southern US',fx:['Reverb (plate)']},
+    'Country':{g:'Male',a:'Mature',t:['Warm', 'Raspy'],tx:['Husky'],d:'Melodic Singing',ac:'Southern US',fx:['Reverb (plate)', 'Doubled vocal']},
+    'Folk':{g:'Male',a:'Young Adult',t:['Warm', 'Breathy'],tx:['Husky'],d:'Melodic Singing',ac:'No specific accent',fx:['Reverb (plate)']},
+    'Lo-Fi / Chill':{g:'Androgynous',a:'Young Adult',t:['Breathy', 'Smoky'],tx:['Velvety'],d:'Half-sung / Spoken',ac:'No specific accent',fx:['Lo-fi / tape saturation', 'Reverb (plate)']}
   }
 };
+
+// Display order + grouping for the Vocal Architect preset row
+const VA_PRESET_GROUPS = [
+  ['Pop, R&B & Soul', ['R&B','Pop','Soul / Gospel','EDM / Dance']],
+  ['Hip-Hop & Global', ['Hip-Hop','Trap','UK Drill','Afrobeats','Latin / Reggaeton','Dancehall']],
+  ['Rock & Metal', ['Classic Rock','Gritty Rock','Alt Rock','Indie Soft','Punk','Pop Punk','Grunge','Emo','Heavy Metal','Blues Rock','Southern Rock','Psychedelic Rock','Shoegaze']],
+  ['Jazz & Blues', ['Jazz','Vocal Jazz / Crooner','Smooth Jazz','Swing / Big Band','Bossa Nova','Lounge','Acid Jazz','Jazz Rap','Blues']],
+  ['Country, Folk & Chill', ['Country','Folk','Lo-Fi / Chill']]
+];
 
 function mkChip(label, isActive, onClickFn, teal=false) {
   const el = document.createElement('div');
@@ -1865,7 +1944,7 @@ function renderFSKeyGrid() {
 function renderFSAll() {
   renderChips('fsPlatformChips', FS_OPTS.platforms, o => FS.platform===o, o => FS.platform=o);
   renderChips('fsMoodChips', FS_OPTS.moods, o => FS.mood===o, o => FS.mood=o);
-  renderFSSelect('fsGenre', FS_OPTS.genres, FS.genre, v => FS.genre=v);
+  renderGenreSelect('fsGenre', FS.genre, v => FS.genre=v);
   renderFSSelect('fsTempo', FS_OPTS.tempos, FS.tempo, v => FS.tempo=v);
   renderFSKeyGrid();
   // Structure
@@ -1887,9 +1966,14 @@ function renderFSAll() {
   // VA
   const vpEl = document.getElementById('vaPresetChips');
   vpEl.innerHTML = '';
-  Object.keys(FS_OPTS.vaPresets).forEach(name => {
-    const c = mkChip(name, false, () => loadVAPreset(name));
-    vpEl.appendChild(c);
+  VA_PRESET_GROUPS.forEach(([group, names]) => {
+    const label = document.createElement('div');
+    label.className = 'va-group-label';
+    label.textContent = group;
+    const row = document.createElement('div');
+    row.className = 'chip-row va-group-row';
+    names.forEach(name => row.appendChild(mkChip(name, false, () => loadVAPreset(name))));
+    vpEl.appendChild(label); vpEl.appendChild(row);
   });
   renderChips('vaGenderChips', FS_OPTS.vaGenders, o => FS.vaGender===o, o => FS.vaGender=o, true);
   renderChips('vaAgeChips', FS_OPTS.vaAges, o => FS.vaAge===o, o => FS.vaAge=o, true);
@@ -2006,7 +2090,7 @@ function renderFSOutput(out) {
 // ═══════════════════════════════════════════════════════════
 // INSTRUMENTAL
 // ═══════════════════════════════════════════════════════════
-const instState = { instruments:[], leadStyle:null, moods:[], bpm:90, complexity:5, key:'No preference', prompt:'' };
+const instState = { instruments:[], leadStyle:null, moods:[], genre:'', bpm:90, complexity:5, key:'No preference', prompt:'' };
 const INST_KEYS = ['C Major','C Minor','D Major','D Minor','E Major','E Minor','F Major','F Minor','G Major','G Minor','A Major','A Minor','B Major','B Minor','No preference'];
 function renderInstKeyGrid() {
   const el = document.getElementById('instKeyGrid');
@@ -2021,7 +2105,7 @@ function instGoStep(n) {
     p.classList.remove('active','done');
     if (i===n) p.classList.add('active'); else if (i<n) p.classList.add('done');
   }
-  if (n===2) renderInstKeyGrid();
+  if (n===2) { renderInstKeyGrid(); renderGenreSelect('instGenre', instState.genre, v => instState.genre = v, 'No preference — let the instruments decide'); }
   if (n===5) buildInstRelease();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -2057,6 +2141,7 @@ FORMAT:
 PROMPT: [70-100 words. Start with [Instrumental]. Include instruments, BPM, key, lead style, mood, no-vocals directive. Optimize for ${G.platform}: ${pd.tip}]
 RATIONALE: [1-2 sentences, producer tone]
 
+Genre: ${instState.genre || 'not specified — infer it from the instruments and mood'}
 Instruments: ${instState.instruments.join(', ')}
 Lead: ${instState.leadStyle}
 Moods: ${instState.moods.join(', ')}
@@ -2072,7 +2157,7 @@ Extra direction: ${detail||'none'}${GENRE_ONLY_RULE}${engPromptBlock()}`, 800);
   } catch(e) {
     const keyBit = instState.key !== 'No preference' ? `, ${instState.key}` : '';
     const engBit = buildEngineerBrief();
-    instState.prompt = `[Instrumental] ${instState.bpm} BPM${keyBit} — ${instState.moods.join(', ')} arrangement featuring ${instState.instruments.join(', ')}. ${instState.leadStyle} style. No vocals. Complexity ${instState.complexity}/10.${engBit?' Mix: '+engBit+'.':''} ${detail||'Let the instruments carry the full emotional weight.'}`;
+    instState.prompt = `[Instrumental${instState.genre ? ' · ' + instState.genre : ''}] ${instState.bpm} BPM${keyBit} — ${instState.moods.join(', ')} arrangement featuring ${instState.instruments.join(', ')}. ${instState.leadStyle} style. No vocals. Complexity ${instState.complexity}/10.${engBit?' Mix: '+engBit+'.':''} ${detail||'Let the instruments carry the full emotional weight.'}`;
   }
   document.getElementById('instPromptText').textContent = instState.prompt;
   document.getElementById('instPromptReminder').textContent = instState.prompt;
@@ -2087,7 +2172,7 @@ Extra direction: ${detail||'none'}${GENRE_ONLY_RULE}${engPromptBlock()}`, 800);
   const link = document.getElementById('instPlatformLink');
   link.href = pd.link; link.textContent = 'Open ' + G.platform + ' →';
   // Save to history + render variations button
-  saveToHistory('Instrumental', instState.prompt, `${instState.leadStyle} · ${instState.bpm} BPM · ${instState.key}`);
+  saveToHistory('Instrumental', instState.prompt, `${instState.genre ? instState.genre + ' · ' : ''}${instState.leadStyle} · ${instState.bpm} BPM · ${instState.key}`);
   const varWrap = document.getElementById('instVariationsWrap');
   if (varWrap) varWrap.innerHTML = `<button class="btn-primary btn-teal" onclick="generateVariations(${JSON.stringify(instState.prompt).replace(/"/g,'&quot;')},'instVariations',{mode:'Instrumental',context:'Lead: ${instState.leadStyle}; Moods: ${instState.moods.join(', ')}; ${instState.bpm} BPM'})">✨ Generate 3 Variations</button><div id="instVariations"></div>`;
 }
@@ -2109,7 +2194,7 @@ function buildInstRelease() {
     <div class="output-wrap"><div class="output-header-bar"><span class="output-header-label">Caption</span><button class="copy-btn-inline" onclick="copyElem('instCaptionText',this)">Copy</button></div><pre class="output-pre" id="instCaptionText">${esc(caption)}</pre></div></div>`;
 }
 function restartInst() {
-  Object.assign(instState,{instruments:[],leadStyle:null,moods:[],bpm:90,complexity:5,key:'No preference',prompt:''});
+  Object.assign(instState,{instruments:[],leadStyle:null,moods:[],genre:'',bpm:90,complexity:5,key:'No preference',prompt:''});
   renderInstKeyGrid();
   document.querySelectorAll('#panel-instrumental .inst-btn,.style-btn,.mood-tag').forEach(b=>b.classList.remove('selected'));
   document.getElementById('inst-btn-1').disabled=true; document.getElementById('inst-btn-2').disabled=true;
@@ -2123,9 +2208,14 @@ function restartInst() {
 // ═══════════════════════════════════════════════════════════
 // STEMS
 // ═══════════════════════════════════════════════════════════
-const stemState = { bpm:90, key:'C Major', platform:'Suno', vibe:'', stems:[], currentInst:null, currentIcon:'', currentCat:'', tags:{feel:[],vocalStyle:[],mix:[]} };
+const stemState = { bpm:90, key:'C Major', platform:'Suno', genre:'', vibe:'', stems:[], currentInst:null, currentIcon:'', currentCat:'', tags:{feel:[],vocalStyle:[],mix:[]} };
 
-function toggleStemSessionModal() { document.getElementById('stemSessionModal').classList.toggle('open'); }
+function toggleStemSessionModal() {
+  const m = document.getElementById('stemSessionModal');
+  if (!m.classList.contains('open')) renderGenreSelect('stemGenre', stemState.genre, setStemGenre, 'No preference');
+  m.classList.toggle('open');
+}
+function setStemGenre(v) { stemState.genre = v; document.getElementById('stemGenreDisplay').textContent = v || 'Any'; }
 function switchStemCat(btn, cat) {
   document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -2177,6 +2267,7 @@ Category: ${stemState.currentCat}
 Platform: ${G.platform}
 BPM: ${stemState.bpm}
 Key: ${stemState.key}
+Genre: ${stemState.genre||'not specified'}
 Vibe: ${stemState.vibe||'not specified'}
 Role: ${role||'not specified'}
 Feel: ${feel}${isVocal?`
@@ -2186,7 +2277,7 @@ Mix: ${mix}${GENRE_ONLY_RULE}${engPromptBlock()}`, 400);
     showStemPreview(text.trim());
   } catch(e) {
     const engBit = buildEngineerBrief();
-    showStemPreview(`[${stemState.currentInst}] ${stemState.bpm} BPM, ${stemState.key}. ${role||'Supports the arrangement'}. Feel: ${feel}. Mix: ${mix}.${isVocal&&vocalStyle?' Vocal: '+vocalStyle+'.':''}${lyric?' Theme: '+lyric+'.':''}${engBit?' Production: '+engBit+'.':''}`);
+    showStemPreview(`[${stemState.currentInst}] ${stemState.bpm} BPM, ${stemState.key}${stemState.genre ? ', ' + stemState.genre : ''}. ${role||'Supports the arrangement'}. Feel: ${feel}. Mix: ${mix}.${isVocal&&vocalStyle?' Vocal: '+vocalStyle+'.':''}${lyric?' Theme: '+lyric+'.':''}${engBit?' Production: '+engBit+'.':''}`);
   }
 }
 function showStemPreview(prompt) {
@@ -2332,7 +2423,7 @@ document.getElementById('lyricsConcept').addEventListener('input', assembleLyric
 // ═══════════════════════════════════════════════════════════
 // CO-WRITE
 // ═══════════════════════════════════════════════════════════
-const CW = { mode:'personal', task:'Continue my lines', rhyme:'Natural mix', lines:4, genre:'Hip-Hop / R&B', mood:'Introspective', aiSection:'Full Song', lastAI:null };
+const CW = { mode:'personal', task:'Continue my lines', rhyme:'Natural mix', lines:4, genre:'Hip-Hop', mood:'Introspective', aiSection:'Full Song', lastAI:null };
 const CW_AI_SECTIONS = {
   'Full Song':'Write a complete song: [Verse 1], [Pre-Chorus], [Chorus], [Verse 2], [Pre-Chorus], [Chorus], [Bridge], [Chorus]. Keep the whole thing under 2800 characters.',
   'Verse':'Write one verse, 8–16 lines depending on what the genre expects.',
@@ -2344,7 +2435,6 @@ const CW_OPTS = {
   tasks:['Continue my lines','Suggest rhymes for last line','Fill in the blanks','Rewrite/improve my lines','Compare and suggest better','Add a hook/chorus','Add a bridge'],
   rhymes:['Natural mix','Perfect rhymes only','Slant / near rhymes','Multisyllabic rhymes','Internal rhymes','Free verse'],
   linesOpts:[2,4,6,8],
-  genres:['Hip-Hop / R&B','Pop','Trap','Afrobeats','Indie / Alt','Country','EDM / Dance','Rock','Drill','Lo-fi / Chill'],
   moods:['Introspective','Euphoric','Melancholic','Aggressive','Romantic','Dark / Brooding','Hopeful','Nostalgic','Confident / Flex']
 };
 const CW_TASK_INSTR = {
@@ -2370,7 +2460,7 @@ function renderCWAll() {
   renderChips('cwRhymeChips', CW_OPTS.rhymes, o=>CW.rhyme===o, o=>CW.rhyme=o, true);
   renderChips('cwLinesChips', CW_OPTS.linesOpts, o=>CW.lines===o, o=>CW.lines=o, true);
   renderChips('cwSectionChips', Object.keys(CW_AI_SECTIONS), o=>CW.aiSection===o, o=>CW.aiSection=o, true);
-  renderFSSelect('cwGenre', CW_OPTS.genres, CW.genre, v=>CW.genre=v);
+  renderGenreSelect('cwGenre', CW.genre, v=>CW.genre=v);
   renderFSSelect('cwMood', CW_OPTS.moods, CW.mood, v=>CW.mood=v);
 }
 
@@ -2548,8 +2638,15 @@ function relGoStep(n) {
 function relSelectGenre(btn, val) {
   document.querySelectorAll('#panel-release .choice-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected'); relState.genre=val;
+  document.getElementById('relGenreSelect').value = '';
   document.getElementById('rel-btn-1').disabled=false;
 }
+function relSelectGenreFromList(val) {
+  document.querySelectorAll('#panel-release .choice-btn').forEach(b=>b.classList.remove('selected'));
+  relState.genre = val || null;
+  document.getElementById('rel-btn-1').disabled = !val;
+}
+function renderRelGenreSelect() { renderGenreSelect('relGenreSelect', '', relSelectGenreFromList, '— Browse all genres —'); }
 function relToggleMood(btn, mood) {
   if (btn.classList.contains('selected')) { btn.classList.remove('selected'); relState.moods=relState.moods.filter(m=>m!==mood); }
   else { if(relState.moods.length>=3) return; btn.classList.add('selected'); relState.moods.push(mood); }
@@ -2610,11 +2707,11 @@ function buildRelRelease() {
   const steps = [
     {title:'Export & trim the hook',body:"Take the best 30–60 seconds — specifically the moment that hits hardest. This is your Reel/Short clip. No intros, no fades."},
     {title:'Write your caption FIRST',body:"Before you open Instagram or TikTok, write the caption. The caption drives saves and shares — not just plays."},
-    {title:'Post to TikTok first',body:`TikTok is your discovery engine. Post the 30–60s clip with 3–5 hashtags: #${genre.toLowerCase().replace(/[\s\/&]/g,'')} #aimusic #suno #producerlife`},
+    {title:'Post to TikTok first',body:`TikTok is your discovery engine. Post the 30–60s clip with 3–5 hashtags: #${genre.toLowerCase().replace(/[^a-z0-9]/g,'')} #aimusic #suno #producerlife`},
     {title:'Repost to Reels 2–4 hours later',body:"Same clip, slight caption variation. Instagram's algorithm treats it as new content. Don't cross-post instantly."},
     {title:'YouTube Short + Community post',body:"Upload the Short to YouTube. Then post in your Skool community: \"Which variation should I turn into a full track?\""}
   ];
-  const caption = `This ${mood} ${genre} track just hit different 🎵\n\nMade it with AI — took [X mins] from idea to finished track.\n\n[Add one line about what inspired the vibe]\n\nSave this if you want to hear more like it 🔖\n\n#${genre.toLowerCase().replace(/[\s\/&]/g,'')} #aimusic #suno #musicproducer`;
+  const caption = `This ${mood} ${genre} track just hit different 🎵\n\nMade it with AI — took [X mins] from idea to finished track.\n\n[Add one line about what inspired the vibe]\n\nSave this if you want to hear more like it 🔖\n\n#${genre.toLowerCase().replace(/[^a-z0-9]/g,'')} #aimusic #suno #musicproducer`;
   document.getElementById('relReleaseContent').innerHTML = `
     <div class="workflow-steps">${steps.map((s,i)=>`<div class="wf-step"><div class="wf-num">${i+1}</div><div><h4>${s.title}</h4><p>${s.body}</p></div></div>`).join('')}</div>
     <div style="margin-top:16px;"><div class="f-label f-label-muted" style="margin-bottom:8px;">Caption Formula (fill in the brackets)</div>
@@ -2623,6 +2720,7 @@ function buildRelRelease() {
 function restartRelease() {
   Object.assign(relState,{genre:null,moods:[],bpm:120,energy:6,prompt:''});
   document.querySelectorAll('#panel-release .choice-btn,.mood-tag').forEach(b=>b.classList.remove('selected'));
+  renderRelGenreSelect();
   document.getElementById('rel-btn-1').disabled=true; document.getElementById('rel-btn-2').disabled=true;
   document.getElementById('relPromptOutput').style.display='none';
   document.getElementById('relDetail').value='';
@@ -2660,6 +2758,7 @@ function resetAll() {
 window.addEventListener('DOMContentLoaded', () => {
   renderFSAll();
   renderCWAll();
+  renderRelGenreSelect();
   renderAllEngineerPanels();
   updateHistoryCount();
   // API key input pre-fill
