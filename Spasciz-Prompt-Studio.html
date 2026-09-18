@@ -391,6 +391,8 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .wiz-skip a:hover{color:var(--cs-teal)}
 
 /* WIZARD — PROVIDER PICKER */
+.wiz-model-note{font-size:11px;color:var(--cs-text-faint);line-height:1.6;margin-top:7px}
+.wiz-model-note code{font-family:var(--cs-mono);color:var(--cs-text-muted)}
 .wiz-prov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .wiz-prov{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius-card);padding:14px 16px;cursor:pointer;transition:all .2s;color:var(--cs-text-muted)}
 .wiz-prov:hover{border-color:var(--cs-bg-border-hover)}
@@ -467,7 +469,14 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <h2>You Own the Engine</h2>
       <p class="wiz-body">Prompt Studio has <strong>no subscription and no servers</strong>. The AI features run on <strong>your own API key</strong> — Claude or ChatGPT, your choice — so you pay the provider directly at cost. Nothing routed through me, no markup.</p>
       <div class="wiz-prov-grid" id="wizProvGrid"></div>
+      <div class="field-group" style="margin-bottom:14px;">
+        <label class="f-label f-label-teal">Model <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">— pick any version</span></label>
+        <select class="f-select" id="wizModelSelect" onchange="wizSetModel(this.value)"></select>
+        <input type="text" class="f-input" id="wizCustomModel" placeholder="Type any model ID, e.g. claude-opus-4-8 or gpt-5.6-sol" style="display:none;margin-top:8px;font-family:var(--cs-mono);font-size:12px;" onchange="wizSetCustomModel(this.value)" onkeydown="if(event.key==='Enter')wizSetCustomModel(this.value)">
+        <div class="wiz-model-note" id="wizModelNote"></div>
+      </div>
       <div class="wiz-cost" id="wizCostTable"></div>
+      <div class="wiz-model-note" style="margin:-10px 0 16px;">Cost estimates are based on list prices; actual cost depends on how long your prompts and results are.</div>
       <div class="wiz-note"><strong>Already have a key?</strong> Jump straight to the last step and paste it — Claude or OpenAI, it'll figure out which.</div>
       <div class="wiz-nav">
         <div class="spacer"></div>
@@ -484,12 +493,12 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
         <h2>Create Your Anthropic Account</h2>
         <p class="wiz-body">This is the account that powers your generations. Free to create.</p>
         <ul class="wiz-list">
-          <li><span class="wiz-num">1</span><div>Open the Anthropic Console and sign up with your email.</div></li>
+          <li><span class="wiz-num">1</span><div>Open the Claude Console (platform.claude.com) and sign up with your email.</div></li>
           <li><span class="wiz-num">2</span><div>Verify your email and log in.</div></li>
-          <li><span class="wiz-num">3</span><div>Go to <strong>Settings → Billing</strong>. New accounts usually get <strong>$5 in free credit</strong> — that's roughly 250 generations, enough to run Prompt Studio for weeks before you pay anything.</div></li>
-          <li><span class="wiz-num">4</span><div>If you don't see free credit, add a card and load <strong>$5</strong>. That's the smallest amount and it lasts a long time.</div></li>
+          <li><span class="wiz-num">3</span><div>Go to <strong>Settings → Billing</strong>. New accounts get a small amount of free credit to test with.</div></li>
+          <li><span class="wiz-num">4</span><div>When that runs out, add a card and load <strong>$5</strong>. On the recommended model that covers well over 100 vocal scripts.</div></li>
         </ul>
-        <a class="wiz-link" href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener">Open Anthropic Billing ↗</a>
+        <a class="wiz-link" href="https://platform.claude.com/settings/billing" target="_blank" rel="noopener">Open Anthropic Billing ↗</a>
         <div class="wiz-warn"><strong>Heads up:</strong> API credit is separate from a Claude.ai Pro subscription. Having Claude Pro does <em>not</em> give you API credit — you need credit on the Console side.</div>
       </div>
       <div class="wiz-pv" data-for="openai">
@@ -522,7 +531,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <li><span class="wiz-num">2</span><div>Click <strong>Create Key</strong>. Name it something you'll recognize — "Prompt Studio" works.</div></li>
           <li><span class="wiz-num">3</span><div><strong>Copy it immediately.</strong> Anthropic shows the full key exactly once. If you close the dialog without copying, just delete it and make another.</div></li>
         </ul>
-        <a class="wiz-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Open API Keys ↗</a>
+        <a class="wiz-link" href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener">Open API Keys ↗</a>
         <div class="wiz-note">Your key starts with <strong>sk-ant-</strong> and is a long string of characters. Treat it like a password — anyone with it can spend your credit.</div>
       </div>
       <div class="wiz-pv" data-for="openai">
@@ -1394,7 +1403,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 // ═══════════════════════════════════════════════════════════
 // GLOBAL STATE
 // ═══════════════════════════════════════════════════════════
-let G = { keys: { anthropic: '', openai: '' }, provider: 'anthropic', openaiModel: '', platform: 'Suno' };
+let G = { keys: { anthropic: '', openai: '' }, provider: 'anthropic', platform: 'Suno' };
 
 const PLATFORM_DATA = {
   'Suno': { tip: 'In Suno Custom Mode, add [instrumental] in the lyrics box to suppress vocals.', link: 'https://suno.com/create', create: 'Use Custom Mode. Type [instrumental] in the lyrics field to suppress all vocals.' },
@@ -1693,27 +1702,45 @@ function copyTextInline(btn, text) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// AI PROVIDERS — the buyer brings their own Claude or ChatGPT key
+// AI PROVIDERS — the buyer brings their own Claude or ChatGPT key and picks the model
 // ═══════════════════════════════════════════════════════════
-const ANTHROPIC_MODEL = 'claude-sonnet-4-6';
-// Preference order. Current OpenAI models are reasoning models: they need max_completion_tokens and
-// reasoning_effort, and their hidden reasoning spends the same token budget as the visible answer.
-const OPENAI_MODELS = [
-  { id:'gpt-5.6-terra', reasoning:true  },   // OpenAI's balanced cost/quality pick
-  { id:'gpt-5.6-luna',  reasoning:true  },
-  { id:'gpt-6-astra',   reasoning:true  },
-  { id:'gpt-5.6-sol',   reasoning:true  },
-  { id:'gpt-4.1',       reasoning:false },   // fallbacks for accounts without the current models
-  { id:'gpt-4o',        reasoning:false }
-];
+// Curated versions shown first. price = [input, output] USD per million tokens.
+//  • Claude: effort 'low' keeps prompt-writing fast and cheap; `thinks` models think by default and that
+//    thinking counts against max_tokens, so they get headroom. Claude 4.7+ tokenizer ≈ 1.3× tokens (tokMul).
+//  • OpenAI: `reasoning` models need max_completion_tokens + reasoning_effort, and their hidden reasoning
+//    spends the same budget as the answer.
+const MODEL_CATALOG = {
+  anthropic: [
+    { id:'claude-sonnet-5',           label:'Claude Sonnet 5',   note:'Best balance of speed and quality',     price:[2,10],  effort:'low', thinks:true,  tokMul:1.3, recommended:true },
+    { id:'claude-opus-5',             label:'Claude Opus 5',     note:'Top quality, higher cost',              price:[5,25],  effort:'low', thinks:true,  tokMul:1.3 },
+    { id:'claude-fable-5-1',          label:'Claude Fable 5.1',  note:'Deepest reasoning — slowest, priciest', price:[10,50], effort:'low', thinks:true,  tokMul:1.3 },
+    { id:'claude-haiku-4-5-20251001', label:'Claude Haiku 4.5',  note:'Fastest and lowest cost',               price:[1,5],   effort:null,  thinks:false, tokMul:1 },
+    { id:'claude-sonnet-4-6',         label:'Claude Sonnet 4.6', note:'Previous generation',                   price:[3,15],  effort:null,  thinks:false, tokMul:1 }
+  ],
+  openai: [
+    { id:'gpt-5.6-terra', label:'GPT-5.6 Terra', note:'Best balance of speed and quality', price:[2,12],    reasoning:true,  recommended:true },
+    { id:'gpt-6-astra',   label:'GPT-6 Astra',   note:'Most capable, highest cost',        price:[10,50],   reasoning:true },
+    { id:'gpt-5.6-sol',   label:'GPT-5.6 Sol',   note:'Flagship for complex work',         price:[4,20],    reasoning:true },
+    { id:'gpt-5.6-luna',  label:'GPT-5.6 Luna',  note:'Lowest cost',                       price:[0.2,1.2], reasoning:true },
+    { id:'gpt-4.1',       label:'GPT-4.1',       note:'Older model, no reasoning',         price:[2,8],     reasoning:false },
+    { id:'gpt-4o',        label:'GPT-4o',        note:'Older model, no reasoning',         price:[2.5,10],  reasoning:false }
+  ]
+};
+const CLAUDE_THINKING_HEADROOM = 8000;
 const OPENAI_REASONING_HEADROOM = 12000;
+const CUSTOM_MODEL = '__custom__';
 const PROVIDERS = {
   anthropic: { name:'Claude',  by:'Anthropic', storage:'cs_anthropic_api_key' },
   openai:    { name:'ChatGPT', by:'OpenAI',    storage:'cs_openai_api_key' }
 };
+G.models = { anthropic:'', openai:'' };           // chosen model per provider ('' = recommended)
+G.accountModels = { anthropic:[], openai:[] };    // [{id,label}] the buyer's account can use, fetched on connect
 try {
-  for (const p of Object.keys(PROVIDERS)) G.keys[p] = localStorage.getItem(PROVIDERS[p].storage) || '';
-  G.openaiModel = localStorage.getItem('cs_openai_model') || '';
+  for (const p of Object.keys(PROVIDERS)) {
+    G.keys[p] = localStorage.getItem(PROVIDERS[p].storage) || '';
+    G.models[p] = localStorage.getItem(`cs_${p}_model`) || '';
+    G.accountModels[p] = JSON.parse(localStorage.getItem(`cs_${p}_models_cache`) || '[]');
+  }
   const saved = localStorage.getItem('cs_ai_provider');
   if (saved && PROVIDERS[saved]) G.provider = saved;
 } catch(e){}
@@ -1731,6 +1758,45 @@ function detectProvider(k) {
   if (k.startsWith('sk-')) return 'openai';
   return null;
 }
+
+// ── MODELS ────────────────────────────────────────────────
+function catalogEntry(p, id) { return MODEL_CATALOG[p].find(m => m.id === id); }
+function recommendedModel(p) { return MODEL_CATALOG[p].find(m => m.recommended).id; }
+function activeModel(p = G.provider) { return G.models[p] || recommendedModel(p); }
+// Request settings for any model — curated ones are known; anything else is inferred from its ID
+function modelSpec(p, id) {
+  const c = catalogEntry(p, id);
+  if (c) return c;
+  if (p === 'openai') return { id, reasoning: /^(gpt-5|gpt-6|o\d)/i.test(id) };
+  return { id, effort:'low', thinks:true };   // assume current-generation Claude; effort is dropped automatically if rejected
+}
+function modelLabel(p, id) {
+  const c = catalogEntry(p, id);
+  if (c) return c.label;
+  const acct = G.accountModels[p].find(m => m.id === id);
+  return acct ? acct.label : id;
+}
+function setModel(p, id) {
+  G.models[p] = (id === recommendedModel(p)) ? '' : id;
+  try { localStorage.setItem(`cs_${p}_model`, G.models[p]); } catch(e){}
+  updateApiDot(); wizRenderProviders();
+}
+function cacheAccountModels(p, list) {
+  G.accountModels[p] = list;
+  try { localStorage.setItem(`cs_${p}_models_cache`, JSON.stringify(list)); } catch(e){}
+}
+function isOpenAIChatModel(id) {
+  return /^(gpt-|o\d|chatgpt-)/.test(id) && !/(audio|realtime|transcribe|tts|image|search|embed|moderation|instruct|dall-e|whisper|codex)/.test(id);
+}
+// Rough per-run cost from list prices. Shapes are [label, input tokens, output tokens, extra thinking tokens at low effort].
+const COST_SHAPES = [['One AI vocal script',1300,1300,800], ['One Co-Write pass',1200,1000,700], ['One stem prompt',450,130,250]];
+function estCost(spec, shape) {
+  const [, inTok, outTok, think] = shape, mul = spec.tokMul || 1;
+  const out = outTok + ((spec.thinks || spec.reasoning) ? think : 0);
+  return (inTok * mul * spec.price[0] + out * mul * spec.price[1]) / 1e6;
+}
+function fmtCost(c) { return c < 0.005 ? '<$0.01' : '~$' + c.toFixed(2); }
+
 function setActiveProvider(p) {
   if (!hasKey(p)) return;
   G.provider = p;
@@ -1745,8 +1811,8 @@ function saveProviderKey(p, k) {
 function removeProviderKey(p) {
   if (!confirm(`Remove your ${PROVIDERS[p].name} key from this browser?`)) return;
   G.keys[p] = '';
-  try { localStorage.removeItem(PROVIDERS[p].storage); if (p === 'openai') localStorage.removeItem('cs_openai_model'); } catch(e){}
-  if (p === 'openai') G.openaiModel = '';
+  try { localStorage.removeItem(PROVIDERS[p].storage); } catch(e){}
+  cacheAccountModels(p, []);
   normalizeProvider();
   try { localStorage.setItem('cs_ai_provider', G.provider); } catch(e){}
   updateApiDot(); wizRenderProviders();
@@ -1754,11 +1820,7 @@ function removeProviderKey(p) {
 
 // ── API KEY SETUP WIZARD ──────────────────────────────────
 let wizStep = 1;
-let wizProvider = G.provider;   // which provider's setup steps the wizard is showing
-const WIZ_COSTS = {
-  anthropic: [['One AI vocal script','~$0.02'],['One Co-Write pass','~$0.02'],['One stem prompt','~$0.01'],['Anthropic free credit for new accounts','$5 = ~250 runs']],
-  openai:    [['One AI vocal script','~$0.04'],['One Co-Write pass','~$0.04'],['One stem prompt','~$0.01'],['$5 of OpenAI prepaid credit','= ~125+ runs']]
-};
+let wizProvider = G.provider;   // which provider the wizard is showing
 function openApiModal() {
   wizProvider = G.provider;
   wizGo(1);
@@ -1782,7 +1844,17 @@ function wizPickProvider(p) {
   if (hasKey(p)) setActiveProvider(p);   // picking a connected provider makes it the active engine
   wizRenderProviders();
 }
-// Provider cards, cost table, and which provider's steps 2–3 are visible
+function wizSetModel(val) {
+  const custom = document.getElementById('wizCustomModel');
+  if (val === CUSTOM_MODEL) { custom.style.display = 'block'; custom.focus(); return; }
+  custom.style.display = 'none';
+  setModel(wizProvider, val);
+}
+function wizSetCustomModel(val) {
+  const id = (val || '').trim();
+  if (id) setModel(wizProvider, id);
+}
+// Provider cards, model picker, cost table, and which provider's steps 2–3 are visible
 function wizRenderProviders() {
   const grid = document.getElementById('wizProvGrid');
   if (grid) grid.innerHTML = Object.entries(PROVIDERS).map(([p, info]) => {
@@ -1795,9 +1867,39 @@ function wizRenderProviders() {
       <span class="wiz-prov-name">${info.name}</span><span class="wiz-prov-by">by ${info.by}</span>
       <span>${status}${remove}</span></div>`;
   }).join('');
+
+  // Model picker: curated list, then anything else on the buyer's account, then a free-text ID
+  const sel = document.getElementById('wizModelSelect');
+  const current = activeModel(wizProvider);
+  if (sel) {
+    const cat = MODEL_CATALOG[wizProvider];
+    const extras = G.accountModels[wizProvider].filter(m => !catalogEntry(wizProvider, m.id));
+    const inList = !!catalogEntry(wizProvider, current) || extras.some(m => m.id === current);
+    sel.innerHTML =
+      `<optgroup label="Popular">${cat.map(m => `<option value="${esc(m.id)}"${m.id === current ? ' selected' : ''}>${esc(m.label)}${m.recommended ? ' — Recommended' : ''}</option>`).join('')}</optgroup>`
+      + (extras.length ? `<optgroup label="More models on your account">${extras.map(m => `<option value="${esc(m.id)}"${m.id === current ? ' selected' : ''}>${esc(m.label)}</option>`).join('')}</optgroup>` : '')
+      + `<option value="${CUSTOM_MODEL}"${inList ? '' : ' selected'}>Enter any model ID…</option>`;
+    const custom = document.getElementById('wizCustomModel');
+    custom.style.display = inList ? 'none' : 'block';
+    if (!inList) custom.value = current;
+    const spec = catalogEntry(wizProvider, current);
+    document.getElementById('wizModelNote').innerHTML = spec
+      ? `${esc(spec.note)} · $${spec.price[0]} in / $${spec.price[1]} out per million tokens`
+      : `Custom model <code>${esc(current)}</code> — check the provider's pricing page for its cost.`;
+  }
+
   const cost = document.getElementById('wizCostTable');
-  if (cost) cost.innerHTML = WIZ_COSTS[wizProvider].map(([l, v], i, a) =>
-    `<div class="wiz-cost-row${i === a.length - 1 ? ' hi' : ''}"><span>${l}</span><span>${v}</span></div>`).join('');
+  if (cost) {
+    const spec = catalogEntry(wizProvider, current);
+    if (spec) {
+      const rows = COST_SHAPES.map(s => `<div class="wiz-cost-row"><span>${s[0]}</span><span>${fmtCost(estCost(spec, s))}</span></div>`);
+      const perScript = estCost(spec, COST_SHAPES[0]);
+      rows.push(`<div class="wiz-cost-row hi"><span>$5 of credit on ${esc(spec.label)}</span><span>≈ ${Math.floor(5 / perScript).toLocaleString()} vocal scripts</span></div>`);
+      cost.innerHTML = rows.join('');
+    } else {
+      cost.innerHTML = `<div class="wiz-cost-row hi"><span>Cost for a custom model</span><span>see provider pricing</span></div>`;
+    }
+  }
   document.querySelectorAll('.wiz-pv').forEach(el => el.classList.toggle('show', el.dataset.for === wizProvider));
 }
 function wizStatus(msg, kind) {
@@ -1807,7 +1909,7 @@ function wizStatus(msg, kind) {
   el.innerHTML = msg || '';
 }
 
-// Runs a minimal real request so the buyer finds out here, not mid-generation.
+// Runs a minimal real request with the chosen model so the buyer finds out here, not mid-generation.
 // Provider is detected from the key itself, so either kind of key can be pasted.
 async function verifyAndSaveKey() {
   const k = (document.getElementById('apiKeyInput').value || '').trim();
@@ -1828,69 +1930,90 @@ async function verifyAndSaveKey() {
     saveProviderKey(p, k);
     document.getElementById('apiKeyInput').value = '';
     wizProvider = p; wizRenderProviders();
-    wizStatus(`✓ Connected to ${PROVIDERS[p].name}${result.detail ? ' (' + result.detail + ')' : ''}. Every mode is unlocked — you're ready to build.`, 'ok');
+    wizStatus(`✓ Connected — running <strong>${esc(modelLabel(p, activeModel(p)))}</strong>.${result.switched ? ' ' + result.switched : ''} Every mode is unlocked. Change the model anytime from the header button.`, 'ok');
     txt.textContent = '✓ Connected';
-    setTimeout(() => { closeApiModal(); txt.innerHTML = '🔌 Verify &amp; Connect'; }, 1600);
+    setTimeout(() => { closeApiModal(); txt.innerHTML = '🔌 Verify &amp; Connect'; }, result.switched ? 3200 : 1800);
   } finally {
     btn.disabled = false;
     if (txt.textContent !== '✓ Connected') txt.innerHTML = '🔌 Verify &amp; Connect';
   }
 }
+// If the chosen model isn't on this account, fall back to the best curated one that is
+function reconcileModel(p, ids) {
+  const chosen = activeModel(p);
+  if (!ids.length || ids.includes(chosen)) return { id: chosen };
+  const fallback = MODEL_CATALOG[p].find(m => ids.includes(m.id));
+  if (!fallback) return { id: null };
+  return { id: fallback.id, switched: `${esc(modelLabel(p, chosen))} isn't available on this account, so it's set to ${esc(fallback.label)}.` };
+}
+
+const ANTHROPIC_HEADERS = k => ({ 'Content-Type':'application/json', 'x-api-key':k, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' });
+function anthropicBody(spec, prompt, maxTokens, withEffort) {
+  const body = { model: spec.id, max_tokens: maxTokens, messages: [{ role:'user', content: prompt }] };
+  if (withEffort && spec.effort) body.output_config = { effort: spec.effort };
+  return body;
+}
+// Unknown Claude models may not support effort — if the API says so, retry once without it
+async function anthropicFetch(k, spec, prompt, maxTokens) {
+  const send = withEffort => fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers: ANTHROPIC_HEADERS(k), body: JSON.stringify(anthropicBody(spec, prompt, maxTokens, withEffort)) });
+  let res = await send(true);
+  if (res.status === 400 && spec.effort) {
+    const t = await res.clone().text();
+    if (/effort|output_config/i.test(t)) res = await send(false);
+  }
+  return res;
+}
 
 async function verifyAnthropicKey(k) {
   let res;
-  try {
-    res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': k, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] })
-    });
-  } catch (e) {
-    return { ok:false, msg:'Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.' };
-  }
-  if (res.ok) return { ok:true };
+  try { res = await fetch('https://api.anthropic.com/v1/models?limit=1000', { headers: ANTHROPIC_HEADERS(k) }); }
+  catch (e) { return { ok:false, msg:'Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.' }; }
+  if (res.status === 401) return { ok:false, msg:'Anthropic rejected this key. It may be mistyped, revoked, or from a deleted account. Generate a fresh one in <strong>Settings → API Keys</strong> and paste it again.' };
+  let list = [];
+  if (res.ok) { try { list = ((await res.json()).data || []).map(m => ({ id: m.id, label: m.display_name || m.id })); } catch(e) {} }
+  cacheAccountModels('anthropic', list);
+  const pick = reconcileModel('anthropic', list.map(m => m.id));
+  if (!pick.id) return { ok:false, msg:'Your key works, but none of the supported Claude models are available on this account.' };
+  if (pick.switched) setModel('anthropic', pick.id);
+  try { res = await anthropicFetch(k, modelSpec('anthropic', pick.id), 'hi', 64); }
+  catch (e) { return { ok:false, msg:'Couldn\'t reach Anthropic — check your internet connection, or whether a VPN/ad-blocker is blocking api.anthropic.com. Your key was not saved.' }; }
+  if (res.ok) return { ok:true, switched: pick.switched };
   let detail = '';
   try { detail = JSON.stringify(await res.json()); } catch(e) {}
-  if (res.status === 401) return { ok:false, msg:'Anthropic rejected this key. It may be mistyped, revoked, or from a deleted account. Generate a fresh one in <strong>Settings → API Keys</strong> and paste it again.' };
-  if (res.status === 400 && /credit|balance|billing/i.test(detail)) return { ok:false, msg:'The key works, but the account has <strong>no credit</strong>. Add $5 at <strong>Settings → Billing</strong>, then hit Verify again. (Claude Pro is separate — it doesn\'t fund API usage.)' };
+  if (res.status === 400 && /credit|balance|billing/i.test(detail)) return { ok:false, msg:'The key works, but the account has <strong>no credit</strong>. Add credit at <strong>Settings → Billing</strong>, then hit Verify again. (Claude Pro is separate — it doesn\'t fund API usage.)' };
+  if (res.status === 404) return { ok:false, msg:`The model <strong>${esc(pick.id)}</strong> wasn't found on this account. Pick a different model on Step 1, then verify again.` };
   if (res.status === 429) return { ok:false, msg:'Rate limited right now. Wait about a minute and try again — the key itself looks fine.' };
   if (res.status === 403) return { ok:false, msg:'This key doesn\'t have permission for the Messages API. Create a standard key in <strong>Settings → API Keys</strong>.' };
-  return { ok:false, msg:'Anthropic returned error ' + res.status + '. ' + (detail ? detail.slice(0, 160) : 'Try again in a moment.') };
+  return { ok:false, msg:'Anthropic returned error ' + res.status + '. ' + (detail ? esc(detail.slice(0, 160)) : 'Try again in a moment.') };
 }
 
 // Two-stage check. OpenAI returns readable (CORS-enabled) errors on GET /v1/models but NOT on POST
 // errors — a failed POST just shows up as a network error. So the key is judged on the models call,
-// and the account's available models tell us which one to use; the POST then confirms it can generate.
+// and the account's model list tells us what the buyer can run; the POST then confirms it can generate.
 async function verifyOpenAIKey(k) {
   let res;
-  try {
-    res = await fetch('https://api.openai.com/v1/models', { headers: { Authorization: 'Bearer ' + k } });
-  } catch (e) {
-    return { ok:false, msg:'Couldn\'t reach OpenAI — check your internet connection, or whether a VPN/ad-blocker is blocking api.openai.com. Your key was not saved.' };
-  }
+  try { res = await fetch('https://api.openai.com/v1/models', { headers: { Authorization: 'Bearer ' + k } }); }
+  catch (e) { return { ok:false, msg:'Couldn\'t reach OpenAI — check your internet connection, or whether a VPN/ad-blocker is blocking api.openai.com. Your key was not saved.' }; }
   if (res.status === 401) return { ok:false, msg:'OpenAI rejected this key. It may be mistyped or revoked. Create a fresh one at <strong>platform.openai.com → API keys</strong> and paste it again.' };
   if (res.status === 403) return { ok:false, msg:'This key is restricted and can\'t read models. Create a new key with <strong>Permissions: All</strong>.' };
   if (res.status === 429) return { ok:false, msg:'Rate limited right now. Wait about a minute and try again — the key itself looks fine.' };
   if (!res.ok) return { ok:false, msg:'OpenAI returned error ' + res.status + '. Try again in a moment.' };
   let ids = [];
-  try { ids = ((await res.json()).data || []).map(m => m.id); } catch(e) {}
-  const pick = OPENAI_MODELS.find(m => ids.includes(m.id));
-  if (!pick) return { ok:false, msg:'Your key works, but this OpenAI account doesn\'t have access to a supported GPT model yet. New accounts sometimes need to add credit first — check <strong>Settings → Billing</strong>, then verify again.' };
-  try {
-    await openAIRequest(k, pick, 'hi', 64, true);
-  } catch (e) {
-    return { ok:false, msg: e.message };
-  }
-  G.openaiModel = pick.id;
-  try { localStorage.setItem('cs_openai_model', pick.id); } catch(e){}
-  return { ok:true, detail: pick.id };
+  try { ids = ((await res.json()).data || []).map(m => m.id).filter(isOpenAIChatModel).sort(); } catch(e) {}
+  cacheAccountModels('openai', ids.map(id => ({ id, label: id })));
+  const pick = reconcileModel('openai', ids);
+  if (!pick.id) return { ok:false, msg:'Your key works, but this OpenAI account doesn\'t have access to a supported GPT model yet. New accounts sometimes need to add credit first — check <strong>Settings → Billing</strong>, then verify again.' };
+  if (pick.switched) setModel('openai', pick.id);
+  try { await openAIRequest(k, modelSpec('openai', pick.id), 'hi', 64, true); }
+  catch (e) { return { ok:false, msg: e.message }; }
+  return { ok:true, switched: pick.switched };
 }
 
 function updateApiDot() {
   const dot = document.getElementById('apiDot');
   const label = document.getElementById('apiKeyLabel');
   if (dot) dot.style.color = hasActiveKey() ? 'var(--cs-teal)' : 'var(--cs-text-faint)';
-  if (label) label.textContent = hasActiveKey() ? PROVIDERS[G.provider].name : 'API Key';
+  if (label) label.textContent = hasActiveKey() ? modelLabel(G.provider, activeModel()) : 'API Key';
   const cw = document.getElementById('cwApiWarn');
   if (cw && document.getElementById('panel-cowrite').classList.contains('active')) cw.style.display = hasActiveKey() ? 'none' : 'flex';
 }
@@ -1903,25 +2026,21 @@ async function callAI(prompt, maxTokens = 2000) {
   return G.provider === 'openai' ? callOpenAI(prompt, maxTokens) : callAnthropic(prompt, maxTokens);
 }
 async function callAnthropic(prompt, maxTokens) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': G.keys.anthropic, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
-  });
+  const spec = modelSpec('anthropic', activeModel('anthropic'));
+  const res = await anthropicFetch(G.keys.anthropic, spec, prompt, maxTokens + (spec.thinks ? CLAUDE_THINKING_HEADROOM : 0));
   if (!res.ok) { const t = await res.text(); throw new Error('API ' + res.status + ': ' + t.slice(0,150)); }
   const data = await res.json();
-  let text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
-  if (!text) throw new Error('Empty response');
+  const text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+  if (!text) throw new Error(data.stop_reason === 'max_tokens' ? 'Claude ran out of room before finishing — try again.' : 'Empty response');
   return text;
 }
 async function callOpenAI(prompt, maxTokens) {
-  const model = OPENAI_MODELS.find(m => m.id === G.openaiModel) || OPENAI_MODELS[0];
-  return openAIRequest(G.keys.openai, model, prompt, maxTokens, false);
+  return openAIRequest(G.keys.openai, modelSpec('openai', activeModel('openai')), prompt, maxTokens, false);
 }
-async function openAIRequest(key, model, prompt, maxTokens, isVerify) {
-  const body = { model: model.id, messages: [{ role: 'user', content: prompt }],
-                 max_completion_tokens: model.reasoning ? maxTokens + (isVerify ? 256 : OPENAI_REASONING_HEADROOM) : maxTokens };
-  if (model.reasoning) body.reasoning_effort = 'low';
+async function openAIRequest(key, spec, prompt, maxTokens, isVerify) {
+  const body = { model: spec.id, messages: [{ role: 'user', content: prompt }],
+                 max_completion_tokens: spec.reasoning ? maxTokens + (isVerify ? 256 : OPENAI_REASONING_HEADROOM) : maxTokens };
+  if (spec.reasoning) body.reasoning_effort = 'low';
   let res;
   try {
     res = await fetch('https://api.openai.com/v1/chat/completions', {
