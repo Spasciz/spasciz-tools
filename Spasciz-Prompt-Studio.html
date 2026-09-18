@@ -314,6 +314,24 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .session-modal-inline{display:none;background:var(--cs-bg-card);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius-card);padding:24px;margin-bottom:16px;animation:fadeUp .4s cubic-bezier(0.16,1,0.3,1)}
 .session-modal-inline.open{display:block}
 
+/* GETTING STARTED GUIDE */
+.guide-step{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--cs-bg-border)}
+.guide-step:first-child{padding-top:4px}
+.guide-step:last-child{border-bottom:none}
+.guide-num{flex-shrink:0;width:26px;height:26px;border-radius:var(--cs-radius);background:var(--cs-accent);color:var(--cs-bg);display:flex;align-items:center;justify-content:center;font-family:var(--cs-mono);font-size:11px;font-weight:700}
+.guide-step h3{font-family:var(--cs-mono);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cs-cream);margin-bottom:7px}
+.guide-step p{font-size:13px;color:var(--cs-text-muted);line-height:1.65;margin-bottom:7px}
+.guide-step p:last-child{margin-bottom:0}
+.guide-step p strong{color:var(--cs-text)}
+.guide-modes{list-style:none;padding:0;margin:0}
+.guide-modes li{font-size:12.5px;color:var(--cs-text-muted);line-height:1.55;padding:5px 0;display:grid;grid-template-columns:100px 1fr;gap:6px;align-items:baseline}
+.guide-modes li strong{color:var(--cs-teal);font-family:var(--cs-mono);font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+.guide-tag{font-family:var(--cs-mono);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cs-accent);margin-left:4px;white-space:nowrap}
+.guide-kbd{font-family:var(--cs-mono);font-size:11px;background:var(--cs-bg);border:1px solid var(--cs-bg-border);border-radius:3px;padding:1px 6px;color:var(--cs-text);white-space:nowrap}
+.guide-foot-note{font-family:var(--cs-mono);font-size:10px;letter-spacing:.5px;color:var(--cs-text-faint);text-align:center;line-height:1.7;margin-top:4px}
+.guide-foot-note a{color:var(--cs-teal);text-decoration:none}
+.guide-foot-note strong{color:var(--cs-text-muted)}
+
 /* HISTORY PANEL */
 .history-count{background:var(--cs-accent);color:var(--cs-bg);padding:2px 7px;border-radius:2px;font-family:var(--cs-mono);font-size:9px;font-weight:700;letter-spacing:.5px;margin-left:4px}
 .history-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;justify-content:flex-end}
@@ -591,6 +609,9 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <button class="platform-btn" onclick="selectPlatform(this,'Universal')"><span class="platform-dot"></span>Universal</button>
   </div>
   <div class="header-right">
+    <button class="hdr-btn" id="guideBtn" onclick="openGuide()" title="Getting started guide">
+      <span>?</span> Guide
+    </button>
     <button class="hdr-btn" id="historyBtn" onclick="openHistoryPanel()" title="Prompt history">
       <span>◷</span> History <span class="history-count" id="historyCount" style="display:none;">0</span>
     </button>
@@ -600,6 +621,92 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
     <button class="hdr-btn" onclick="resetAll()">Reset</button>
   </div>
 </header>
+
+<!-- GETTING STARTED GUIDE -->
+<div class="history-backdrop" id="guideBackdrop" onclick="if(event.target===this)closeGuide()">
+  <aside class="history-panel" aria-label="Getting started">
+    <div class="history-panel-head">
+      <div>
+        <div class="history-panel-eyebrow">Spasciz Prompt Studio · 5-minute setup</div>
+        <h2 class="history-panel-title">Getting Started</h2>
+      </div>
+      <button class="hdr-btn" onclick="closeGuide()">✕ Close</button>
+    </div>
+    <div class="history-panel-body">
+
+      <div class="guide-step">
+        <span class="guide-num">1</span>
+        <div>
+          <h3>Bookmark this page</h3>
+          <p>Prompt Studio runs in your browser — nothing to install. Bookmark it now (<span class="guide-kbd">⌘ D</span> on Mac, <span class="guide-kbd">Ctrl D</span> on Windows).</p>
+          <p><strong>Always open it from your Gumroad link.</strong> Every update lands there automatically, and your settings, history, and key are saved in this browser. On a new browser or device, just reconnect your key.</p>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <span class="guide-num">2</span>
+        <div>
+          <h3>Connect your AI engine <span class="guide-tag">~2 min</span></h3>
+          <p>Use your own <strong>Claude or ChatGPT</strong> API key and pick any model. The setup walks you through getting a key and tests it before saving. It costs pennies per generation, paid straight to the provider.</p>
+          <p><strong>Heads up:</strong> ChatGPT Plus and Claude Pro don't include API access — API credit is billed separately, and the setup shows you where.</p>
+          <p>No key yet? <strong>Instrumental, Stems, Lyrics, and Release Flow</strong> still build prompts without one.</p>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <span class="guide-num">3</span>
+        <div>
+          <h3>Pick your music platform</h3>
+          <p>Use the top bar — Suno, Udio, ACE Studio, Stable Audio, ElevenLabs, Mureka, Moises AI, Riffusion, or Universal. Every prompt is formatted for the platform you pick.</p>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <span class="guide-num">4</span>
+        <div>
+          <h3>Choose a mode</h3>
+          <ul class="guide-modes">
+            <li><strong>Full Song</strong><span>Complete lyrics and a vocal script. Design the voice with Vocal Architect. <span class="guide-tag">needs key</span></span></li>
+            <li><strong>Instrumental</strong><span>Build an instrument stack and get a no-vocals prompt.</span></li>
+            <li><strong>Stems</strong><span>Prompt every instrument and vocal layer separately, then export the whole session.</span></li>
+            <li><strong>Lyrics</strong><span>Write your own sections — it assembles platform-ready lyric blocks.</span></li>
+            <li><strong>AI Co-Write</strong><span>Refine your own lyrics, or have AI write new ones from your idea. <span class="guide-tag">needs key</span></span></li>
+            <li><strong>Release Flow</strong><span>Genre → mood → prompt → create → a posting plan.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <span class="guide-num">5</span>
+        <div>
+          <h3>Generate, then paste into your platform</h3>
+          <p>Hit Generate and copy the result. For full songs, the <strong>style prompt</strong> goes in your platform's style box and the <strong>lyrics</strong> go in its lyrics box (in Suno, use Custom mode).</p>
+          <p>Not quite right? Hit <strong>✨ Generate 3 Variations</strong> for alternate takes.</p>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <span class="guide-num">✦</span>
+        <div>
+          <h3>Level up</h3>
+          <ul class="guide-modes">
+            <li><strong>Engineer</strong><span>Set your mix sound once (or pick a preset) — it shapes every prompt in every mode.</span></li>
+            <li><strong>Genres</strong><span>208 genres in every generator — every rock, metal, and jazz style included.</span></li>
+            <li><strong>History</strong><span>Every prompt you generate is saved. Copy any of them back from the top bar.</span></li>
+            <li><strong>Model</strong><span>Switch engine or model anytime — click its name in the top bar.</span></li>
+            <li><strong>Reset</strong><span>Clears the fields. Your key, history, and Engineer settings stay.</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="history-panel-foot" style="display:flex;flex-direction:column;gap:8px;">
+      <button class="btn-primary" id="guideConnectBtn" onclick="guideConnect()">Connect Claude or ChatGPT →</button>
+      <button class="btn-ghost" onclick="closeGuide()" style="justify-content:center;">Start Creating</button>
+      <div class="guide-foot-note">Reopen this guide anytime with the <strong>Guide</strong> button · Questions? <a href="http://bit.ly/spascizskool" target="_blank" rel="noopener">Join the community</a></div>
+    </div>
+  </aside>
+</div>
 
 <!-- HISTORY PANEL -->
 <div class="history-backdrop" id="historyBackdrop" onclick="if(event.target===this)closeHistoryPanel()">
@@ -1565,6 +1672,21 @@ function updateEngBriefs() {
   });
   if (typeof assembleLyrics === 'function' && document.getElementById('lyricsOutputCard')) assembleLyrics();
 }
+
+// ═══════════════════════════════════════════════════════════
+// GETTING STARTED GUIDE — opens on a buyer's first visit, then from the Guide button
+// ═══════════════════════════════════════════════════════════
+const GUIDE_KEY = 'cs_seen_guide_v1';
+function guideSeen() { try { return !!localStorage.getItem(GUIDE_KEY); } catch(e) { return false; } }
+function openGuide() {
+  document.getElementById('guideConnectBtn').textContent = hasAnyKey() ? 'Change Engine or Model →' : 'Connect Claude or ChatGPT →';
+  document.getElementById('guideBackdrop').classList.add('visible');
+}
+function closeGuide() {
+  document.getElementById('guideBackdrop').classList.remove('visible');
+  try { localStorage.setItem(GUIDE_KEY, '1'); } catch(e){}
+}
+function guideConnect() { closeGuide(); openApiModal(); }
 
 // ═══════════════════════════════════════════════════════════
 // PROMPT HISTORY — localStorage, up to 50 entries
@@ -3058,10 +3180,11 @@ window.addEventListener('DOMContentLoaded', () => {
   renderAllEngineerPanels();
   updateHistoryCount();
   updateApiDot();
-  // Show the setup wizard if no provider is connected yet
-  if (!hasAnyKey()) openApiModal();
+  // First visit: the Getting Started guide (it leads into key setup). After that, prompt for a key only if none is connected.
+  if (!guideSeen()) openGuide();
+  else if (!hasAnyKey()) openApiModal();
   // Esc closes history panel
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeHistoryPanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeHistoryPanel(); closeGuide(); } });
 });
 </script>
 </body>
