@@ -337,11 +337,6 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
 .history-actions{display:flex;gap:6px;flex-wrap:wrap}
 .history-panel-foot{padding:16px 24px;border-top:1px solid var(--cs-bg-border);background:var(--cs-bg)}
 
-/* REFERENCE TRACK INPUT */
-.ref-track-wrap{position:relative}
-.ref-track-wrap::before{content:'🔗';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.7;pointer-events:none}
-.ref-track-input{padding-left:36px !important;font-family:var(--cs-mono);font-size:12px}
-
 /* KEY GRID */
 .key-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:6px}
 .key-btn{background:var(--cs-bg-surface);border:1px solid var(--cs-bg-border);border-radius:var(--cs-radius);padding:10px 4px;text-align:center;cursor:pointer;font-family:var(--cs-mono);font-size:10px;font-weight:600;color:var(--cs-text-muted);transition:all .2s;letter-spacing:1px;text-transform:uppercase}
@@ -607,26 +602,14 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <input type="text" class="f-input" id="fsTheme" placeholder="e.g. late-night drive after a breakup, chasing the bag, moving different">
         </div>
         <div class="field-group">
-          <label class="f-label">Reference Track <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional)</span></label>
-          <div class="ref-track-wrap">
-            <input type="url" class="f-input ref-track-input" id="fsReferenceTrack" placeholder="Paste Spotify / YouTube / SoundCloud URL to anchor the vibe" oninput="FS.referenceTrack=this.value">
-          </div>
-        </div>
-        <div class="field-group">
           <label class="f-label">Mood</label>
           <div class="chip-row" id="fsMoodChips"></div>
         </div>
-        <div class="grid-2" style="margin-top:14px;">
-          <div class="field-group">
-            <label class="f-label">Artist Reference</label>
-            <input type="text" class="f-input" id="fsArtistRef" placeholder="e.g. The Weeknd, SZA, Drake">
-          </div>
+        <div class="grid-3" style="margin-top:14px;">
           <div class="field-group">
             <label class="f-label">Genre</label>
             <select class="f-select" id="fsGenre"></select>
           </div>
-        </div>
-        <div class="grid-2">
           <div class="field-group">
             <label class="f-label">Tempo Category</label>
             <select class="f-select" id="fsTempo"></select>
@@ -718,10 +701,6 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <div class="field-group">
             <label class="f-label f-label-teal">Vocal FX Stack</label>
             <div class="chip-row" id="vaFXChips"></div>
-          </div>
-          <div class="field-group">
-            <label class="f-label f-label-teal">Reference Timbre (vibe only)</label>
-            <input type="text" class="f-input" id="vaRef" placeholder="e.g. 'like Frank Ocean on Blonde' — vibe reference, no copying">
           </div>
           <div class="va-brief" id="vaBriefBox">
             <div class="va-brief-label">Live Vocal Brief</div>
@@ -850,12 +829,6 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           <label class="f-label">Musical Key</label>
           <div class="key-grid" id="instKeyGrid"></div>
         </div>
-        <div class="field-group" style="margin-top:14px;">
-          <label class="f-label">Reference Track <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional)</span></label>
-          <div class="ref-track-wrap">
-            <input type="url" class="f-input ref-track-input" id="instReferenceTrack" placeholder="Paste Spotify / YouTube / SoundCloud URL — anchors the vibe" oninput="instState.referenceTrack=this.value">
-          </div>
-        </div>
         <button class="btn-primary" id="inst-btn-2" onclick="instGoStep(3)" disabled>Build My Instrumental Prompt →</button>
         <button class="btn-ghost" onclick="instGoStep(1)" style="width:100%;margin-top:8px;justify-content:center;">← Back</button>
       </div>
@@ -864,8 +837,8 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <div class="step-card" id="inst-step-3">
         <div class="step-card-label">Step 03 · Prompt Builder</div>
         <h2>Any final direction?</h2>
-        <p class="step-desc">Add a scene, reference, or extra detail — or leave blank and let the system take over.</p>
-        <textarea class="f-textarea" id="instDetail" style="min-height:80px;" placeholder="e.g. 'sounds like Hans Zimmer meets J Dilla' or 'late night studio session' — or leave blank…"></textarea>
+        <p class="step-desc">Add a scene, an idea, or extra detail — or leave blank and let the system take over.</p>
+        <textarea class="f-textarea" id="instDetail" style="min-height:80px;" placeholder="e.g. 'cinematic orchestral swells over dusty boom-bap drums' or 'late night studio session' — or leave blank…"></textarea>
         <div id="engPanel-instrumental" style="margin-top:20px;"></div>
         <button class="btn-primary" id="instGenBtn" onclick="generateInstPrompt()" style="margin-top:16px;"><span id="instGenBtnText">Generate My Instrumental Prompt ⚡</span></button>
         <div id="instPromptOutput" style="display:none;margin-top:20px;">
@@ -958,12 +931,6 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
           </select>
         </div>
         <div class="field-group" style="margin-top:10px;">
-          <label class="f-label">Reference Track <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional)</span></label>
-          <div class="ref-track-wrap">
-            <input type="url" class="f-input ref-track-input" id="stemReferenceTrack" placeholder="Paste Spotify / YouTube / SoundCloud URL — anchors every stem" oninput="stemState.referenceTrack=this.value">
-          </div>
-        </div>
-        <div class="field-group">
           <label class="f-label">Overall Vibe</label>
           <textarea class="f-textarea" style="min-height:60px;" placeholder="e.g. dark cinematic trap, emotional but hard-hitting" oninput="stemState.vibe=this.value"></textarea>
         </div>
@@ -1193,10 +1160,6 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
             <select class="f-select" id="cwMood"></select>
           </div>
         </div>
-        <div class="field-group">
-          <label class="f-label">Artist Reference (vibe only)</label>
-          <input type="text" class="f-input" id="cwArtistRef" placeholder="e.g. like Drake, like Adele — cadence/energy only">
-        </div>
       </div>
 
       <div id="engPanel-cowrite"></div>
@@ -1273,7 +1236,7 @@ pre.output-pre{font-family:var(--cs-mono);font-size:12.5px;line-height:1.85;colo
       <div class="step-card" id="rel-step-3">
         <div class="step-card-label">Step 03 · Prompt Builder</div>
         <h2>Describe your track</h2>
-        <p class="step-desc">Add any details — instruments, theme, lyric idea, or reference. AI builds a complete Suno prompt from everything you've set.</p>
+        <p class="step-desc">Add any details — instruments, theme, or lyric idea. AI builds a complete Suno prompt from everything you've set.</p>
         <textarea class="f-textarea" id="relDetail" style="min-height:80px;" placeholder="e.g. 'piano melody, midnight city vibes, a hook about moving on' — or leave blank to let the system decide…"></textarea>
         <div id="engPanel-release" style="margin-top:20px;"></div>
         <button class="btn-primary" id="relGenBtn" onclick="relGeneratePrompt()" style="margin-top:16px;"><span id="relGenBtnText">Generate My Suno Prompt ⚡</span></button>
@@ -1349,11 +1312,14 @@ const PLATFORM_DATA = {
 const ENG_KEY = 'cs_engineer_profile_v1';
 let ENG = {
   on: false, character: null, color: [], lowEnd: null,
-  tone: null, space: null, dynamics: null, width: null, refMix: ''
+  tone: null, space: null, dynamics: null, width: null
 };
 try {
   const saved = JSON.parse(localStorage.getItem(ENG_KEY) || 'null');
-  if (saved && typeof saved === 'object') ENG = Object.assign(ENG, saved, { color: saved.color || [] });
+  if (saved && typeof saved === 'object') {
+    delete saved.refMix;   // Mix Reference was removed — drop any value saved by an older version
+    ENG = Object.assign(ENG, saved, { color: saved.color || [] });
+  }
 } catch(e){}
 
 const ENG_OPTS = {
@@ -1397,9 +1363,8 @@ function engApplyPreset(name) {
   ENG = Object.assign({}, ENG, JSON.parse(JSON.stringify(p)), { on:true });
   saveENG(); renderAllEngineerPanels();
 }
-function engSetRef(val) { ENG.refMix = val; saveENG(); updateEngBriefs(); }
 function engClear() {
-  ENG = Object.assign(ENG, { character:null, color:[], lowEnd:null, tone:null, space:null, dynamics:null, width:null, refMix:'' });
+  ENG = Object.assign(ENG, { character:null, color:[], lowEnd:null, tone:null, space:null, dynamics:null, width:null });
   saveENG(); renderAllEngineerPanels();
 }
 
@@ -1413,7 +1378,6 @@ function buildEngineerBrief() {
   if (ENG.space) bits.push(ENG.space.toLowerCase().replace(/ & /g,' and ').replace(/ \/ .*/,'') + ' ambience');
   if (ENG.dynamics) bits.push(ENG.dynamics.toLowerCase());
   if (ENG.width) bits.push(ENG.width.toLowerCase().replace(/ \/ .*/,'').replace(/\s*stereo$/,'') + ' stereo image');
-  if (ENG.refMix && ENG.refMix.trim()) bits.push('mix reference: ' + ENG.refMix.trim());
   return bits.join(', ');
 }
 // Wrapped for injection into an AI prompt — empty string when Engineer is off
@@ -1421,6 +1385,8 @@ function engPromptBlock() {
   const b = buildEngineerBrief();
   return b ? `\n\nMIX & MASTER DIRECTION (weave these production qualities into the prompt naturally — do not list them as a separate section):\n${b}` : '';
 }
+// Prompt Studio is genre- and idea-driven: every AI prompt carries this so output never names real artists
+const GENRE_ONLY_RULE = `\n\nSTYLE RULE: Never name real artists, bands, producers, songs, or albums, and never write "in the style of" anyone. Describe the sound only through genre, subgenre, era, instrumentation, mood, tempo, and production qualities.`;
 
 function engChipRow(field) {
   const isMulti = ENG_MULTI.includes(field);
@@ -1459,10 +1425,6 @@ function renderEngineerPanel(key) {
         ${groups.slice(0,6).map(f=>`<div class="field-group"><label class="f-label f-label-teal">${ENG_LABELS[f]}</label><div class="chip-row">${engChipRow(f)}</div></div>`).join('')}
       </div>
       <div class="field-group"><label class="f-label f-label-teal">${ENG_LABELS.width}</label><div class="chip-row">${engChipRow('width')}</div></div>
-      <div class="field-group">
-        <label class="f-label f-label-teal">Mix Reference <span style="color:var(--cs-text-faint);text-transform:none;letter-spacing:0;font-family:var(--cs-font);font-weight:400;">(optional)</span></label>
-        <input type="text" class="f-input" value="${(ENG.refMix||'').replace(/"/g,'&quot;')}" placeholder="e.g. 'mixed like Blonde' or 'Metro Boomin low end'" oninput="engSetRef(this.value)">
-      </div>
       <div class="eng-brief">
         <div class="eng-brief-label">Live Engineer Brief</div>
         <div class="eng-brief-text${brief?'':' eng-brief-empty'}" id="engBrief-${key}">${brief || 'Pick options above — this brief gets woven into every prompt you generate.'}</div>
@@ -1592,7 +1554,7 @@ async function generateVariations(basePrompt, targetContainerId, opts) {
 ORIGINAL PROMPT:
 ${basePrompt}
 
-${ctx?'CONTEXT: '+ctx:''}
+${ctx?'CONTEXT: '+ctx:''}${GENRE_ONLY_RULE}
 
 Output format:
 [Variation 1 prompt]
@@ -1772,12 +1734,12 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
 // FULL SONG — DATA & CHIP BUILDERS
 // ═══════════════════════════════════════════════════════════
 const FS = {
-  platform: 'Suno', theme:'', mood:'Introspective', artistRef:'', genre:'Hip-Hop / R&B',
+  platform: 'Suno', theme:'', mood:'Introspective', genre:'Hip-Hop / R&B',
   tempo:'Mid-tempo', explicit:'Clean', structure:['Intro','Verse','Hook','Verse','Hook','Bridge','Hook','Outro'],
   adlib:'Medium', vocalDir:[], useVA:true,
-  bpm:90, key:'No preference', referenceTrack:'',
+  bpm:90, key:'No preference',
   vaGender:'Male', vaAge:'Young Adult', vaTone:[], vaTexture:[], vaDelivery:'Melodic Singing',
-  vaAccent:'Neutral American', vaFX:[], vaRef:''
+  vaAccent:'Neutral American', vaFX:[]
 };
 const FS_OPTS = {
   moods:['Introspective','Euphoric','Melancholic','Aggressive','Romantic','Dark / Brooding','Hopeful','Nostalgic','Confident / Flex'],
@@ -1802,9 +1764,6 @@ const FS_OPTS = {
   vaAccents:['Neutral American','Southern US','British','London / UK Drill','Caribbean / Jamaican','African (Afrobeats)','Latin','Australian','Soulful Gospel','No specific accent'],
   vaFX:['Autotune (heavy)','Autotune (subtle)','Reverb (big hall)','Reverb (plate)','Delay / echo','Lo-fi / tape saturation','Pitch-up layer','Pitch-down layer','Doubled vocal','Vocoder','Distortion / telephone'],
   vaPresets:{
-    'Weeknd-style':{g:'Male',a:'Young Adult',t:['Dark / Deep','Silky'],tx:['Velvety'],d:'Melodic Singing',ac:'Neutral American',fx:['Reverb (big hall)','Autotune (subtle)']},
-    'SZA-style':{g:'Female',a:'Young Adult',t:['Smooth','Airy','Warm'],tx:['Honeyed'],d:'Sung-Rap',ac:'Neutral American',fx:['Reverb (plate)']},
-    'Drake-style':{g:'Male',a:'Young Adult',t:['Warm','Smooth'],tx:['Clean'],d:'Sung-Rap',ac:'Neutral American',fx:['Autotune (subtle)','Doubled vocal']},
     'Gritty Rock':{g:'Male',a:'Mature',t:['Raspy','Gritty'],tx:['Gravelly'],d:'Belting / Powerful',ac:'Neutral American',fx:['Distortion / telephone','Reverb (big hall)']},
     'Indie Soft':{g:'Androgynous',a:'Young Adult',t:['Airy','Breathy'],tx:['Velvety'],d:'Whisper-Sing',ac:'British',fx:['Reverb (plate)','Lo-fi / tape saturation']},
     'UK Drill':{g:'Male',a:'Young Adult',t:['Dark / Deep','Nasal'],tx:['Clean'],d:'Rap / Flow',ac:'London / UK Drill',fx:['Doubled vocal']}
@@ -1904,8 +1863,6 @@ function buildVABrief() {
   parts.push('Delivery: ' + FS.vaDelivery.toLowerCase());
   if (FS.vaAccent !== 'No specific accent') parts.push('Accent: ' + FS.vaAccent.toLowerCase());
   if (FS.vaFX.length) parts.push('FX: ' + FS.vaFX.join(', ').toLowerCase());
-  const ref = document.getElementById('vaRef').value.trim();
-  if (ref) parts.push('Reference: ' + ref);
   return parts.join(' | ');
 }
 function updateVABrief() {
@@ -1913,13 +1870,10 @@ function updateVABrief() {
   document.getElementById('vaBriefBox').style.display = b ? 'block' : 'none';
   document.getElementById('vaBriefText').textContent = b;
 }
-document.getElementById('vaRef').addEventListener('input', updateVABrief);
 
 async function handleFullSong() {
   FS.theme = document.getElementById('fsTheme').value;
-  FS.artistRef = document.getElementById('fsArtistRef').value;
   FS.explicit = document.getElementById('fsExplicit').value;
-  FS.referenceTrack = document.getElementById('fsReferenceTrack').value.trim();
   const errEl = document.getElementById('fsError');
   errEl.style.display = 'none';
   if (!FS.structure.length) { errEl.textContent = 'Add at least one section to your song structure.'; errEl.style.display='block'; return; }
@@ -1939,8 +1893,6 @@ SONG BRIEF:
 - Tempo Category: ${FS.tempo}
 - BPM: ${FS.bpm}
 - Key: ${FS.key}
-- Artist Reference: ${FS.artistRef || '(open)'}
-- Reference Track: ${FS.referenceTrack || '(none — build from mood/genre)'}
 - Content: ${FS.explicit}
 - Ad-lib Density: ${FS.adlib} — ${adlibGuide[FS.adlib]}
 - Vocal Direction: ${FS.vocalDir.length ? FS.vocalDir.join(', ') : 'standard'}
@@ -1951,7 +1903,7 @@ ${vaBrief}
 
 The style_prompt MUST describe this vocal in producer-facing language. Inside lyrics_script, open with a vocal cue tag like [${FS.vaGender} vocal, ${FS.vaDelivery.toLowerCase()}] and sprinkle matching delivery cues throughout.` : 'VOCAL: Standard default for the genre.'}
 
-RULES: Write ORIGINAL lyrics only. Every section starts with bracket tags: [Verse 1], [Hook], etc. Include vocal direction tags. Ad-libs in parentheses. Keep lyrics under 2800 chars. Write singable lyrics — short phrases, clear rhymes.${engPromptBlock()}
+RULES: Write ORIGINAL lyrics only. Every section starts with bracket tags: [Verse 1], [Hook], etc. Include vocal direction tags. Ad-libs in parentheses. Keep lyrics under 2800 chars. Write singable lyrics — short phrases, clear rhymes.${GENRE_ONLY_RULE}${engPromptBlock()}
 
 Respond with ONLY valid JSON, no markdown:
 {"title":"string","title_alternates":["string","string"],"style_prompt":"string under 200 chars","vocal_prompt_breakdown":"string","lyrics_script":"string with \\n line breaks","character_count":number,"producer_notes":"string"}`;
@@ -1993,7 +1945,7 @@ function renderFSOutput(out) {
 // ═══════════════════════════════════════════════════════════
 // INSTRUMENTAL
 // ═══════════════════════════════════════════════════════════
-const instState = { instruments:[], leadStyle:null, moods:[], bpm:90, complexity:5, key:'No preference', referenceTrack:'', prompt:'' };
+const instState = { instruments:[], leadStyle:null, moods:[], bpm:90, complexity:5, key:'No preference', prompt:'' };
 const INST_KEYS = ['C Major','C Minor','D Major','D Minor','E Major','E Minor','F Major','F Minor','G Major','G Minor','A Major','A Minor','B Major','B Minor','No preference'];
 function renderInstKeyGrid() {
   const el = document.getElementById('instKeyGrid');
@@ -2050,8 +2002,7 @@ Moods: ${instState.moods.join(', ')}
 BPM: ${instState.bpm}
 Key: ${instState.key}
 Complexity: ${instState.complexity}/10
-Reference Track: ${instState.referenceTrack||'(none)'}
-Extra direction: ${detail||'none'}${engPromptBlock()}`, 800);
+Extra direction: ${detail||'none'}${GENRE_ONLY_RULE}${engPromptBlock()}`, 800);
     const pMatch = text.match(/PROMPT:\s*([\s\S]*?)(?=RATIONALE:|$)/i);
     const rMatch = text.match(/RATIONALE:\s*([\s\S]*)/i);
     instState.prompt = (pMatch?.[1]||text).trim();
@@ -2060,7 +2011,7 @@ Extra direction: ${detail||'none'}${engPromptBlock()}`, 800);
   } catch(e) {
     const keyBit = instState.key !== 'No preference' ? `, ${instState.key}` : '';
     const engBit = buildEngineerBrief();
-    instState.prompt = `[Instrumental] ${instState.bpm} BPM${keyBit} — ${instState.moods.join(', ')} arrangement featuring ${instState.instruments.join(', ')}. ${instState.leadStyle} style. No vocals. Complexity ${instState.complexity}/10.${instState.referenceTrack?' Vibe reference: '+instState.referenceTrack+'.':''}${engBit?' Mix: '+engBit+'.':''} ${detail||'Let the instruments carry the full emotional weight.'}`;
+    instState.prompt = `[Instrumental] ${instState.bpm} BPM${keyBit} — ${instState.moods.join(', ')} arrangement featuring ${instState.instruments.join(', ')}. ${instState.leadStyle} style. No vocals. Complexity ${instState.complexity}/10.${engBit?' Mix: '+engBit+'.':''} ${detail||'Let the instruments carry the full emotional weight.'}`;
   }
   document.getElementById('instPromptText').textContent = instState.prompt;
   document.getElementById('instPromptReminder').textContent = instState.prompt;
@@ -2097,8 +2048,7 @@ function buildInstRelease() {
     <div class="output-wrap"><div class="output-header-bar"><span class="output-header-label">Caption</span><button class="copy-btn-inline" onclick="copyElem('instCaptionText',this)">Copy</button></div><pre class="output-pre" id="instCaptionText">${esc(caption)}</pre></div></div>`;
 }
 function restartInst() {
-  Object.assign(instState,{instruments:[],leadStyle:null,moods:[],bpm:90,complexity:5,key:'No preference',referenceTrack:'',prompt:''});
-  const rt = document.getElementById('instReferenceTrack'); if (rt) rt.value = '';
+  Object.assign(instState,{instruments:[],leadStyle:null,moods:[],bpm:90,complexity:5,key:'No preference',prompt:''});
   renderInstKeyGrid();
   document.querySelectorAll('#panel-instrumental .inst-btn,.style-btn,.mood-tag').forEach(b=>b.classList.remove('selected'));
   document.getElementById('inst-btn-1').disabled=true; document.getElementById('inst-btn-2').disabled=true;
@@ -2112,7 +2062,7 @@ function restartInst() {
 // ═══════════════════════════════════════════════════════════
 // STEMS
 // ═══════════════════════════════════════════════════════════
-const stemState = { bpm:90, key:'C Major', platform:'Suno', vibe:'', referenceTrack:'', stems:[], currentInst:null, currentIcon:'', currentCat:'', tags:{feel:[],vocalStyle:[],mix:[]} };
+const stemState = { bpm:90, key:'C Major', platform:'Suno', vibe:'', stems:[], currentInst:null, currentIcon:'', currentCat:'', tags:{feel:[],vocalStyle:[],mix:[]} };
 
 function toggleStemSessionModal() { document.getElementById('stemSessionModal').classList.toggle('open'); }
 function switchStemCat(btn, cat) {
@@ -2167,12 +2117,11 @@ Platform: ${G.platform}
 BPM: ${stemState.bpm}
 Key: ${stemState.key}
 Vibe: ${stemState.vibe||'not specified'}
-Reference Track: ${stemState.referenceTrack||'(none)'}
 Role: ${role||'not specified'}
 Feel: ${feel}${isVocal?`
 Vocal style: ${vocalStyle||'not specified'}
 Lyric: ${lyric||'not specified'}`:''}
-Mix: ${mix}${engPromptBlock()}`, 400);
+Mix: ${mix}${GENRE_ONLY_RULE}${engPromptBlock()}`, 400);
     showStemPreview(text.trim());
   } catch(e) {
     const engBit = buildEngineerBrief();
@@ -2365,7 +2314,6 @@ function cwClearLyrics() { document.getElementById('cwLyrics').value=''; cwUpdat
 
 async function handleCowrite() {
   const lyrics = document.getElementById('cwLyrics').value.trim();
-  const artistRef = document.getElementById('cwArtistRef').value.trim();
   const errEl = document.getElementById('cwError');
   errEl.style.display='none';
   if (!lyrics) { errEl.textContent='Paste your lyrics first — give me something to work with.'; errEl.style.display='block'; return; }
@@ -2388,9 +2336,8 @@ STYLE CONTEXT:
 - Mood: ${CW.mood}
 - Rhyme: ${CW.rhyme} — ${CW_RHYME_GUIDE[CW.rhyme]}
 - Lines to generate: ${CW.lines}
-${artistRef?`- Match the vibe of: ${artistRef} (cadence/energy only — no copied lyrics)`:''} 
 
-RULES: Write ORIGINAL lines only. Study the writer's voice BEFORE writing. Match their DNA. Every line must be singable. Count syllables.${engPromptBlock().replace('weave these production qualities into the prompt naturally — do not list them as a separate section','let this sonic target inform word choice, energy, and phrasing density')}
+RULES: Write ORIGINAL lines only. Study the writer's voice BEFORE writing. Match their DNA. Every line must be singable. Count syllables.${GENRE_ONLY_RULE}${engPromptBlock().replace('weave these production qualities into the prompt naturally — do not list them as a separate section','let this sonic target inform word choice, energy, and phrasing density')}
 
 Respond with ONLY valid JSON, no markdown:
 {"analysis":"2-3 sentences on the writer's style and strengths","writer_original":"their lyrics with \\n line breaks","suggestions":[{"label":"short label","lines":"string with \\n line breaks","why_it_works":"one sentence on the technique"}],"pro_tip":"one co-writer insight specific to this piece"}
@@ -2470,7 +2417,7 @@ Genre: ${relState.genre}
 Moods: ${moodStr}
 BPM: ${relState.bpm}
 Energy: ${relState.energy}/10
-Extra details: ${detail||'no specific details'}${engPromptBlock()}`, 600);
+Extra details: ${detail||'no specific details'}${GENRE_ONLY_RULE}${engPromptBlock()}`, 600);
     relState.prompt = relState.prompt.trim();
   } catch(e) {
     const engBit = buildEngineerBrief();
